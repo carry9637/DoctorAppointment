@@ -25,7 +25,7 @@ const Appointments = () => {
       const temp = await fetchData(
         `/appointment/getallappointments?search=${userId}`
       );
-      setAppointments(temp);
+      setAppointments(temp.filter((app) => app.status !== "Completed"));
       dispatch(setLoading(false));
     } catch (error) {
       console.error("Error fetching appointments:", error);
@@ -67,7 +67,7 @@ const Appointments = () => {
         {
           appointid: appointment._id,
           doctorId: appointment.doctorId._id,
-          doctorname: `${appointment.userId.firstname} ${appointment.userId.lastname}`,
+          doctorname: `${appointment.doctorId.firstname} ${appointment.doctorId.lastname}`,
         },
         {
           headers: {
@@ -116,7 +116,7 @@ const Appointments = () => {
                       <td>{(currentPage - 1) * PerPage + index + 1}</td>
                       <td>{`${appointment.doctorId.firstname} ${appointment.doctorId.lastname}`}</td>
                       <td>{`${appointment.userId.firstname} ${appointment.userId.lastname}`}</td>
-                      <td>{appointment.age}</td> 
+                      <td>{appointment.age}</td>
                       <td>{appointment.gender}</td>
                       <td>{appointment.number}</td>
                       <td>{appointment.bloodGroup}</td>

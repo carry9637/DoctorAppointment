@@ -13,14 +13,23 @@ const notificationRouter = require("./routes/notificationRouter");
 const app = express();
 const port = process.env.PORT || 5015;
 
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "http://localhost:3000",
+      "http://localhost:3001",
+      "http://localhost:3003",
+      "http://localhost:3004",
+    ],
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use("/api/user", userRouter);
 app.use("/api/doctor", doctorRouter);
 app.use("/api/appointment", appointRouter);
 app.use("/api/notification", notificationRouter);
 app.use(express.static(path.join(__dirname, "./client/build")));
-
 
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "./client/build/index.html"));
@@ -29,4 +38,3 @@ app.get("*", (req, res) => {
 const server = app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
-
