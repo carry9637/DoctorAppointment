@@ -43,11 +43,12 @@ const applyfordoctor = async (req, res) => {
       return res.status(400).send("Application already exists");
     }
 
-    const doctor = Doctor({ ...req.body.formDetails, userId: req.locals });
+    const doctor = new Doctor({ ...req.body, userId: req.locals });
     const result = await doctor.save();
 
     return res.status(201).send("Application submitted successfully");
   } catch (error) {
+    console.error("Apply for doctor error:", error);
     res.status(500).send("Unable to submit application");
   }
 };
@@ -116,6 +117,43 @@ const deletedoctor = async (req, res) => {
   }
 };
 
+const getmydoctorprofile = async (req, res) => {
+  try {
+    const doctor = await Doctor.findOne({ userId: req.locals }).populate(
+      "userId"
+    );
+    if (!doctor) {
+      return res.status(404).send(null);
+    }
+    return res.send(doctor);
+  } catch (error) {
+    res.status(500).send("Unable to fetch doctor profile");
+  }
+};
+
+const updatedoctorprofile = async (req, res) => {
+  try {
+    const doctor = await Doctor.findOneAndUpdate(
+      { userId: req.locals },
+      {
+        specialization: req.body.specialization,
+        experience: req.body.experience,
+        fees: req.body.fees,
+      },
+      { new: true }
+    ).populate("userId");
+
+    if (!doctor) {
+      return res.status(404).send("Doctor profile not found");
+    }
+
+    return res.send("Doctor profile updated successfully");
+  } catch (error) {
+    console.error("Update doctor profile error:", error);
+    res.status(500).send("Unable to update doctor profile");
+  }
+};
+
 module.exports = {
   getalldoctors,
   getnotdoctors,
@@ -123,4 +161,6 @@ module.exports = {
   applyfordoctor,
   acceptdoctor,
   rejectdoctor,
+  getmydoctorprofile,
+  updatedoctorprofile,
 };

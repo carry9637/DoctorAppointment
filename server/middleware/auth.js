@@ -10,8 +10,8 @@ const auth = (req, res, next) => {
     req.locals = verifyToken.userId;
     next();
   } catch (error) {
-    console.log(error);
-    return error;
+    console.log("Auth error:", error);
+    return res.status(401).send("Invalid token");
   }
 };
 

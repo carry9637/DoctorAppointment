@@ -2,40 +2,45 @@ import React from "react";
 import AdminApplications from "../components/AdminApplications";
 import AdminAppointments from "../components/AdminAppointments";
 import AdminDoctors from "../components/AdminDoctors";
-import Sidebar from "../components/Sidebar";
-import Users from "../components/Users";
-import Home from "../components/Home";
+import AdminSidebar from "../components/AdminSidebar";
+import AdminUsers from "../components/AdminUsers";
+import AdminHome from "../components/AdminHome";
 import Aprofile from "../components/Aprofile";
+import "../styles/admin-dashboard.css";
 
 const Dashboard = (props) => {
-  console.log(props);
   const { type } = props;
+
   return (
-    <>
+    <div className="admin-layout">
+      <AdminSidebar />
 
-      <section className="layout-section">
-        <div className="layout-container">
-          <Sidebar />
-
-          {
-          type === "home" ?(
-            <Home />
-          ):type === "users" ? (
-            <Users />
-          ) : type === "doctors" ? (
-            <AdminDoctors />
-          ) : type === "applications" ? (
-            <AdminApplications />
-          ) : type === "appointments" ? (
-            <AdminAppointments />
-          ) : type === "aprofile" ? (
-            <Aprofile />
-          ): (
-            <></>
-          )}
+      {type === "home" ? (
+        <AdminHome />
+      ) : type === "users" ? (
+        <AdminUsers />
+      ) : type === "doctors" ? (
+        <AdminDoctors />
+      ) : type === "applications" ? (
+        <AdminApplications />
+      ) : type === "appointments" ? (
+        <AdminAppointments />
+      ) : type === "aprofile" ? (
+        <Aprofile />
+      ) : (
+        <div className="admin-main">
+          <div className="admin-header">
+            <div className="header-title">Dashboard</div>
+          </div>
+          <div className="admin-content">
+            <div className="empty-state">
+              <div className="empty-state-icon">📊</div>
+              <div className="empty-state-text">Select a page from sidebar</div>
+            </div>
+          </div>
         </div>
-      </section>
-    </>
+      )}
+    </div>
   );
 };
 

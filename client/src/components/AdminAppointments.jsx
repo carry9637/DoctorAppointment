@@ -6,7 +6,8 @@ import { setLoading } from "../redux/reducers/rootSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Empty from "./Empty";
 import fetchData from "../helper/apiCall";
-import "../styles/user.css";
+import { FaCheckCircle } from "react-icons/fa";
+import "../styles/admin-dashboard.css";
 
 axios.defaults.baseURL = process.env.REACT_APP_SERVER_DOMAIN;
 
@@ -15,28 +16,26 @@ const AdminAppointments = () => {
   const dispatch = useDispatch();
   const { loading } = useSelector((state) => state.root);
 
-  const getAllAppoint = async (e) => {
+  const getAllAppointments = async () => {
     try {
       dispatch(setLoading(true));
       const temp = await fetchData(`/appointment/getallappointments`);
       setAppointments(temp);
       dispatch(setLoading(false));
-    } catch (error) {}
+    } catch (error) {
+      dispatch(setLoading(false));
+    }
   };
 
-  useEffect(() => {
-    getAllAppoint();
-  }, []);
-
-  const complete = async (ele) => {
+  const completeAppointment = async (appointment) => {
     try {
       await toast.promise(
         axios.put(
           "/appointment/completed",
           {
-            appointid: ele?._id,
-            doctorId: ele?.doctorId._id,
-            doctorname: `${ele?.userId?.firstname} ${ele?.userId?.lastname}`,
+            appointid: appointment?._id,
+            doctorId: appointment?.doctorId._id,
+            doctorname: `${appointment?.userId?.firstname} ${appointment?.userId?.lastname}`,
           },
           {
             headers: {
@@ -45,93 +44,188 @@ const AdminAppointments = () => {
           }
         ),
         {
-          success: "Appointment booked successfully",
-          error: "Unable to book appointment",
-          loading: "Booking appointment...",
+          pending: "Marking appointment complete...",
+          success: "Appointment marked as completed",
+          error: "Unable to update appointment",
         }
       );
-
-      getAllAppoint();
+      getAllAppointments();
     } catch (error) {
       return error;
     }
   };
 
+  useEffect(() => {
+    getAllAppointments();
+  }, []);
+
+  if (loading) return <Loading />;
+
   return (
-    <>
-      {loading ? (
-        <Loading />
-      ) : (
-        <section className="user-section">
-          <h3 className="home-sub-heading">All Appointments</h3>
+    <div className="admin-main">
+      <div className="admin-header">
+        <div className="header-title">Appointments Management</div>
+      </div>
+
+      <div className="admin-content">
+        <div className="data-section">
+          <div className="section-header">
+            <div className="section-title">All Appointments</div>
+            <div style={{ color: "var(--text-light)", fontSize: "0.9rem" }}>
+              Total: {appointments.length}
+            </div>
+          </div>
+
+          {/* Desktop Table View */}
           {appointments.length > 0 ? (
-            <div className="user-container">
-              <table>
+            <div className="data-table-wrapper">
+              <table className="data-table">
                 <thead>
                   <tr>
-                    <th>S.No</th>
                     <th>Doctor</th>
-                    <th>P Name</th>
-                    <th>P Age</th>
-                    <th>P Gender</th>
-                    <th>P Mobile No.</th>
-                    <th>P bloodGroup</th>
-                    <th>P Family Diseases</th>
+                    <th>Patient Name</th>
+                    <th>Email</th>
+                    <th>Mobile</th>
                     <th>Appointment Date</th>
                     <th>Appointment Time</th>
-                    <th>Booking Date</th>
-                    <th>Booking Time</th>
+                    <th>Specialization</th>
                     <th>Status</th>
-
                     <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {appointments?.map((ele, i) => {
-                    return (
-                      <tr key={ele?._id}>
-                        <td>{i + 1}</td>
-                        <td>
-                          {ele?.doctorId?.firstname +
-                            " " +
-                            ele?.doctorId?.lastname}
-                        </td>
-                        <td>
-                          {ele?.userId?.firstname + " " + ele?.userId?.lastname}
-                        </td>
-                        <td>{ele?.age}</td>
-                        <td>{ele?.gender}</td>
-                        <td>{ele?.number}</td>
-                        <td>{ele?.bloodGroup}</td>
-                        <td>{ele?.familyDiseases}</td>
-                        <td>{ele?.date}</td>
-                        <td>{ele?.time}</td>
-                        <td>{ele?.createdAt.split("T")[0]}</td>
-                        <td>{ele?.updatedAt.split("T")[1].split(".")[0]}</td>
-                        <td>{ele?.status}</td>
-                        <td>
-                          <button
-                            className={`btn user-btn accept-btn ${
-                              ele?.status === "Completed" ? "disable-btn" : ""
-                            }`}
-                            disabled={ele?.status === "Completed"}
-                            onClick={() => complete(ele)}
-                          >
-                            Complete
-                          </button>
-                        </td>
-                      </tr>
-                    );
-                  })}
+                  {appointments?.map((appointment) => (
+                    <tr key={appointment?._id}>
+                      <td>
+                        <div style={{ fontWeight: "500" }}>
+                          {appointment?.doctorId?.firstname}{" "}
+                          {appointment?.doctorId?.lastname}
+                        </div>
+                      </td>
+                      <td>
+                        {appointment?.userId?.firstname}{" "}
+                        {appointment?.userId?.lastname}
+                      </td>
+                      <td>{appointment?.userId?.email}</td>
+                      <td>{appointment?.number}</td>
+                      <td>{appointment?.date}</td>
+                      <td>{appointment?.time}</td>
+                      <td>{appointment?.doctorId?.specialization || "N/A"}</td>
+                      <td>
+                        <span
+                          className={`status-badge ${
+                            appointment?.status === "Completed"
+                              ? "status-completed"
+                              : "status-pending"
+                          }`}
+                        >
+                          {appointment?.status}
+                        </span>
+                      </td>
+                      <td>
+                        <button
+                          className={`btn btn-success ${
+                            appointment?.status === "Completed"
+                              ? "disabled"
+                              : ""
+                          }`}
+                          disabled={appointment?.status === "Completed"}
+                          onClick={() => completeAppointment(appointment)}
+                        >
+                          <FaCheckCircle /> Complete
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>
           ) : (
             <Empty />
           )}
-        </section>
-      )}
-    </>
+
+          {/* Mobile Card View */}
+          <div>
+            {appointments.map((appointment) => (
+              <div className="mobile-card" key={appointment?._id}>
+                <div style={{ marginBottom: "12px" }}>
+                  <div
+                    style={{
+                      fontWeight: "600",
+                      color: "var(--text-dark)",
+                      marginBottom: "4px",
+                    }}
+                  >
+                    Dr. {appointment?.doctorId?.firstname}{" "}
+                    {appointment?.doctorId?.lastname}
+                  </div>
+                  <div
+                    style={{ fontSize: "0.85rem", color: "var(--text-light)" }}
+                  >
+                    Patient: {appointment?.userId?.firstname}{" "}
+                    {appointment?.userId?.lastname}
+                  </div>
+                </div>
+
+                <div className="card-row">
+                  <span className="card-label">Email</span>
+                  <span className="card-value" style={{ fontSize: "0.85rem" }}>
+                    {appointment?.userId?.email}
+                  </span>
+                </div>
+
+                <div className="card-row">
+                  <span className="card-label">Mobile</span>
+                  <span className="card-value">{appointment?.number}</span>
+                </div>
+
+                <div className="card-row">
+                  <span className="card-label">Appointment Date</span>
+                  <span className="card-value">{appointment?.date}</span>
+                </div>
+
+                <div className="card-row">
+                  <span className="card-label">Appointment Time</span>
+                  <span className="card-value">{appointment?.time}</span>
+                </div>
+
+                <div className="card-row">
+                  <span className="card-label">Blood Group</span>
+                  <span className="card-value">{appointment?.bloodGroup}</span>
+                </div>
+
+                <div className="card-row">
+                  <span className="card-label">Status</span>
+                  <span className="card-value">
+                    <span
+                      className={`status-badge ${
+                        appointment?.status === "Completed"
+                          ? "status-completed"
+                          : "status-pending"
+                      }`}
+                    >
+                      {appointment?.status}
+                    </span>
+                  </span>
+                </div>
+
+                <div className="card-actions">
+                  <button
+                    className={`btn btn-success ${
+                      appointment?.status === "Completed" ? "disabled" : ""
+                    }`}
+                    disabled={appointment?.status === "Completed"}
+                    onClick={() => completeAppointment(appointment)}
+                  >
+                    <FaCheckCircle /> Complete
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 

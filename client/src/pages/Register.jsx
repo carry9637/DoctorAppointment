@@ -66,7 +66,7 @@ function Register() {
       e.preventDefault();
 
       if (loading) return;
-      if (file === "") return toast.error("Please upload a profile picture");
+      // Profile photo is now optional - removed required validation
       const { firstname, lastname, email, password, confpassword } =
         formDetails;
       if (

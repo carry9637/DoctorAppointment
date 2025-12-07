@@ -6,13 +6,13 @@ import { setLoading } from "../redux/reducers/rootSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Empty from "./Empty";
 import fetchData from "../helper/apiCall";
-import "../styles/user.css";
+import { FaTrash } from "react-icons/fa";
+import "../styles/admin-dashboard.css";
 
 axios.defaults.baseURL = process.env.REACT_APP_SERVER_DOMAIN;
 
 const AdminDoctors = () => {
   const [doctors, setDoctors] = useState([]);
-  const [filter, setFilter] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
 
   const dispatch = useDispatch();
@@ -22,42 +22,39 @@ const AdminDoctors = () => {
     try {
       dispatch(setLoading(true));
       let url = "/doctor/getalldoctors";
-      if (filter !== "all") {
-        url += `?filter=${filter}`;
-      }
       if (searchTerm.trim() !== "") {
-        url += `${filter !== "all" ? "&" : "?"}search=${searchTerm}`;
+        url += `?search=${searchTerm}`;
       }
       const temp = await fetchData(url);
       setDoctors(temp);
       dispatch(setLoading(false));
-    } catch (error) {}
+    } catch (error) {
+      dispatch(setLoading(false));
+    }
   };
 
-  const deleteUser = async (userId) => {
+  const deleteDoctor = async (doctorUserId) => {
     try {
-      const confirm = window.confirm("Are you sure you want to delete?");
+      const confirm = window.confirm(
+        "Are you sure you want to delete this doctor?"
+      );
       if (confirm) {
-        await toast.promise(
-          axios.put(
-            "/doctor/deletedoctor",
-            { userId },
-            {
-              headers: {
-                authorization: `Bearer ${localStorage.getItem("token")}`,
-              },
-            }
-          ),
+        const response = await axios.put(
+          "/doctor/deletedoctor",
+          { userId: doctorUserId },
           {
-            success: "Doctor deleted successfully",
-            error: "Unable to delete Doctor",
-            loading: "Deleting Doctor...",
+            headers: {
+              authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
           }
         );
+        toast.success("Doctor deleted successfully");
         getAllDoctors();
       }
     } catch (error) {
-      return error;
+      console.error("Error:", error);
+      const errorMsg = error.response?.data || "Unable to delete doctor";
+      toast.error(errorMsg);
     }
   };
 
@@ -65,114 +62,166 @@ const AdminDoctors = () => {
     getAllDoctors();
   }, []);
 
-  const filteredDoctors = doctors.filter((doc) => {
-    if (filter === "all") {
-      return true;
-    } else if (filter === "specialization") {
-      return doc.specialization
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase());
-    } else if (filter === "firstname") {
-      return (
-        doc.userId &&
-        doc.userId.firstname.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    } else {
-      return true;
-    }
-  });
+  const filteredDoctors = doctors.filter(
+    (doctor) =>
+      doctor.userId?.firstname
+        ?.toLowerCase()
+        .includes(searchTerm.toLowerCase()) ||
+      doctor.userId?.lastname
+        ?.toLowerCase()
+        .includes(searchTerm.toLowerCase()) ||
+      doctor.userId?.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      doctor.specialization?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  if (loading) return <Loading />;
 
   return (
-    <>
-      {loading ? (
-        <Loading />
-      ) : (
-        <section className="user-section">
-          <div className="ayx">
-            <div className="filter">
-              <label htmlFor="filter">Filter by:</label>
-              <select
-                id="filter"
-                value={filter}
-                onChange={(e) => setFilter(e.target.value)}
-              >
-                <option value="all">All</option>
-                <option value="firstname">Name</option>
-                <option value="specialization">Specialization</option>
-              </select>
-            </div>
+    <div className="admin-main">
+      <div className="admin-header">
+        <div className="header-title">Doctors Management</div>
+      </div>
 
-            <div className="search">
-              <label htmlFor="search">Search:</label>
+      <div className="admin-content">
+        <div className="data-section">
+          <div className="section-header">
+            <div className="section-title">All Doctors</div>
+            <div style={{ color: "var(--text-light)", fontSize: "0.9rem" }}>
+              Total: {filteredDoctors.length}
+            </div>
+          </div>
+
+          {/* Search */}
+          <div className="filter-container">
+            <div className="filter-group" style={{ maxWidth: "400px" }}>
+              <label>Search Doctors</label>
               <input
                 type="text"
-                className="form-input"
-                id="search"
+                placeholder="Search by name, specialization..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Search"
               />
             </div>
           </div>
-          <h3 className="home-sub-heading">All Doctors</h3>
+
+          {/* Desktop Table View */}
           {filteredDoctors.length > 0 ? (
-            <div className="user-container">
-              <table>
+            <div className="data-table-wrapper">
+              <table className="data-table">
                 <thead>
                   <tr>
-                    <th>S.No</th>
-                    <th>Pic</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
+                    <th>Profile</th>
+                    <th>Name</th>
                     <th>Email</th>
-                    <th>Mobile No.</th>
-                    <th>Experience</th>
+                    <th>Mobile</th>
                     <th>Specialization</th>
+                    <th>Experience</th>
                     <th>Fees</th>
-                    <th>Remove</th>
+                    <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredDoctors.map((ele, i) => {
-                    return (
-                      <tr key={ele?._id}>
-                        <td>{i + 1}</td>
-                        <td>
-                          <img
-                            className="user-table-pic"
-                            src={ele?.userId?.pic}
-                            alt={ele?.userId?.firstname}
-                          />
-                        </td>
-                        <td>{ele?.userId?.firstname}</td>
-                        <td>{ele?.userId?.lastname}</td>
-                        <td>{ele?.userId?.email}</td>
-                        <td>{ele?.userId?.mobile}</td>
-                        <td>{ele?.experience}</td>
-                        <td>{ele?.specialization}</td>
-                        <td>{ele?.fees}</td>
-                        <td className="select">
-                          <button
-                            className="btn user-btn"
-                            onClick={() => {
-                              deleteUser(ele?.userId?._id);
-                            }}
-                          >
-                            Remove
-                          </button>
-                        </td>
-                      </tr>
-                    );
-                  })}
+                  {filteredDoctors.map((doctor) => (
+                    <tr key={doctor._id}>
+                      <td>
+                        <img
+                          src={doctor.userId?.pic}
+                          alt={doctor.userId?.firstname}
+                          className="table-avatar"
+                        />
+                      </td>
+                      <td>
+                        {doctor.userId?.firstname} {doctor.userId?.lastname}
+                      </td>
+                      <td>{doctor.userId?.email}</td>
+                      <td>{doctor.userId?.mobile}</td>
+                      <td>{doctor.specialization}</td>
+                      <td>{doctor.experience || "N/A"} years</td>
+                      <td>Rs {doctor.fees}</td>
+                      <td>
+                        <button
+                          className="btn btn-danger"
+                          onClick={() => deleteDoctor(doctor.userId?._id)}
+                        >
+                          <FaTrash /> Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>
           ) : (
             <Empty />
           )}
-        </section>
-      )}
-    </>
+
+          {/* Mobile Card View */}
+          <div>
+            {filteredDoctors.map((doctor) => (
+              <div className="mobile-card" key={doctor._id}>
+                <div
+                  style={{ display: "flex", gap: "12px", marginBottom: "12px" }}
+                >
+                  <img
+                    src={doctor.userId?.pic}
+                    alt={doctor.userId?.firstname}
+                    className="table-avatar"
+                  />
+                  <div style={{ flex: 1 }}>
+                    <div
+                      style={{ fontWeight: "600", color: "var(--text-dark)" }}
+                    >
+                      {doctor.userId?.firstname} {doctor.userId?.lastname}
+                    </div>
+                    <div
+                      style={{
+                        fontSize: "0.85rem",
+                        color: "var(--text-light)",
+                      }}
+                    >
+                      {doctor.specialization}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="card-row">
+                  <span className="card-label">Email</span>
+                  <span className="card-value" style={{ fontSize: "0.85rem" }}>
+                    {doctor.userId?.email}
+                  </span>
+                </div>
+
+                <div className="card-row">
+                  <span className="card-label">Mobile</span>
+                  <span className="card-value">{doctor.userId?.mobile}</span>
+                </div>
+
+                <div className="card-row">
+                  <span className="card-label">Experience</span>
+                  <span className="card-value">
+                    {doctor.experience || "N/A"} years
+                  </span>
+                </div>
+
+                <div className="card-row">
+                  <span className="card-label">Fees</span>
+                  <span className="card-value">Rs {doctor.fees}</span>
+                </div>
+
+                <div className="card-actions">
+                  <button
+                    className="btn btn-danger"
+                    onClick={() => deleteDoctor(doctor.userId?._id)}
+                  >
+                    <FaTrash /> Delete
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 
