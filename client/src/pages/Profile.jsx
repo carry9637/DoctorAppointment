@@ -8,14 +8,6 @@ import { useDispatch, useSelector } from "react-redux";
 import Loading from "../components/Loading";
 import fetchData from "../helper/apiCall";
 import jwt_decode from "jwt-decode";
-import {
-  FaUser,
-  FaEnvelope,
-  FaPhone,
-  FaCake,
-  FaMapMarkerAlt,
-  FaVenusMars,
-} from "react-icons/fa";
 
 axios.defaults.baseURL = process.env.REACT_APP_SERVER_DOMAIN;
 
@@ -57,7 +49,8 @@ function Profile() {
 
   useEffect(() => {
     getUser();
-  }, [dispatch]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const inputChange = (e) => {
     const { name, value } = e.target;
