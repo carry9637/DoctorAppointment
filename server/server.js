@@ -21,6 +21,8 @@ app.use(
       "http://localhost:3001",
       "http://localhost:3003",
       "http://localhost:3004",
+      "https://doctor-appoinment-2025.netlify.app",
+      "https://*.netlify.app",
     ],
     credentials: true,
   })
