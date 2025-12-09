@@ -17,13 +17,12 @@ const Navbar = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem("token") || "";
   const user = token ? jwt_decode(token) : null;
-  
 
   const logoutFunc = () => {
     dispatch(setUserInfo({}));
     localStorage.removeItem("token");
     navigate("/login");
-  }
+  };
 
   return (
     <header>

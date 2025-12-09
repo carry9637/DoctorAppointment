@@ -75,27 +75,19 @@ const ApplyDoctor = () => {
 
       if (existingApplication) {
         // Update existing
-        await axios.put(
-          "/doctor/updatedoctorprofile",
-          formDetails,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        );
+        await axios.put("/doctor/updatedoctorprofile", formDetails, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
         toast.success("Doctor profile updated successfully");
       } else {
         // Create new
-        await axios.post(
-          "/doctor/applyfordoctor",
-          formDetails,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        );
+        await axios.post("/doctor/applyfordoctor", formDetails, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
         toast.success("Doctor application sent successfully");
       }
 

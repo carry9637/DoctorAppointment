@@ -7,12 +7,7 @@ import Loading from "../components/Loading";
 import { toast } from "react-hot-toast";
 import jwt_decode from "jwt-decode";
 import axios from "axios";
-import {
-  FaCheckCircle,
-  FaCalendar,
-  FaUser,
-  FaPhone,
-} from "react-icons/fa";
+import { FaCheckCircle, FaCalendar, FaUser, FaPhone } from "react-icons/fa";
 import "../styles/doctor-dashboard.css";
 
 axios.defaults.baseURL = process.env.REACT_APP_SERVER_DOMAIN;
