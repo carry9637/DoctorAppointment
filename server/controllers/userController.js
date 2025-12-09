@@ -63,17 +63,22 @@ const register = async (req, res) => {
   try {
     const emailPresent = await User.findOne({ email: req.body.email });
     if (emailPresent) {
-      return res.status(400).send("Email already exists");
+      return res.status(400).json({ message: "Email already exists" });
     }
     const hashedPass = await bcrypt.hash(req.body.password, 10);
-    const user = await User({ ...req.body, password: hashedPass });
+    const user = new User({ ...req.body, password: hashedPass });
     const result = await user.save();
     if (!result) {
-      return res.status(500).send("Unable to register user");
+      return res.status(500).json({ message: "Unable to register user" });
     }
-    return res.status(201).send("User registered successfully");
+    return res
+      .status(201)
+      .json({ message: "User registered successfully", user: result });
   } catch (error) {
-    res.status(500).send("Unable to register user");
+    console.error("Register error:", error);
+    res
+      .status(500)
+      .json({ message: "Unable to register user", error: error.message });
   }
 };
 
