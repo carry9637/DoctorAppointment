@@ -5,7 +5,7 @@ import { setLoading } from "../redux/reducers/rootSlice";
 import Loading from "../components/Loading";
 import { toast } from "react-hot-toast";
 import axios from "axios";
-import { FaStethoscope, FaClipboardList, FaCheckCircle } from "react-icons/fa";
+import { FaStethoscope, FaClipboardList } from "react-icons/fa";
 import "../styles/doctor-dashboard.css";
 
 axios.defaults.baseURL = process.env.REACT_APP_SERVER_DOMAIN;
@@ -47,6 +47,7 @@ const ApplyDoctor = () => {
 
   useEffect(() => {
     getMyApplication();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const inputChange = (e) => {
@@ -74,7 +75,7 @@ const ApplyDoctor = () => {
 
       if (existingApplication) {
         // Update existing
-        const updateResponse = await axios.put(
+        await axios.put(
           "/doctor/updatedoctorprofile",
           formDetails,
           {
@@ -86,7 +87,7 @@ const ApplyDoctor = () => {
         toast.success("Doctor profile updated successfully");
       } else {
         // Create new
-        const applyResponse = await axios.post(
+        await axios.post(
           "/doctor/applyfordoctor",
           formDetails,
           {

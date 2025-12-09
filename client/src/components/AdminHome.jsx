@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { FaUsers, FaCalendar, FaUserMd, FaChartBar } from "react-icons/fa";
+import { FaUsers, FaCalendar, FaUserMd } from "react-icons/fa";
 import {
   BarChart,
   Bar,
-  LineChart,
-  Line,
   CartesianGrid,
   XAxis,
   YAxis,
   Tooltip,
-  Legend,
   ResponsiveContainer,
   PieChart,
   Pie,
@@ -51,6 +48,7 @@ const AdminHome = () => {
 
   useEffect(() => {
     fetchDataCounts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const chartData = [

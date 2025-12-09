@@ -9,7 +9,7 @@ import Loading from "../components/Loading";
 import { useDispatch, useSelector } from "react-redux";
 import { setLoading } from "../redux/reducers/rootSlice";
 import Empty from "../components/Empty";
-import { FaStethoscope, FaSearch } from "react-icons/fa";
+import { FaStethoscope } from "react-icons/fa";
 
 const Doctors = () => {
   const [doctors, setDoctors] = useState([]);
@@ -17,7 +17,6 @@ const Doctors = () => {
   const [filteredDoctors, setFilteredDoctors] = useState([]);
   const dispatch = useDispatch();
   const { loading } = useSelector((state) => state.root);
-  const navigate = useNavigate();
 
   const fetchAllDocs = async () => {
     dispatch(setLoading(true));
@@ -29,6 +28,7 @@ const Doctors = () => {
 
   useEffect(() => {
     fetchAllDocs();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleSearch = (value) => {

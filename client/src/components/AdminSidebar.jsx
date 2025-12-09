@@ -7,7 +7,6 @@ import {
   FaHome,
   FaUsers,
   FaUserMd,
-  FaCalendar,
   FaFileAlt,
   FaUser,
   FaSignOutAlt,
@@ -17,7 +16,6 @@ import "../styles/admin-dashboard.css";
 const AdminSidebar = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const location = useLocation();
 
   const handleLogout = () => {

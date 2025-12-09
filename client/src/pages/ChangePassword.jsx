@@ -16,7 +16,6 @@ function ChangePassword() {
   const { userId } = jwt_decode(localStorage.getItem("token"));
   const dispatch = useDispatch();
   const { loading } = useSelector((state) => state.root);
-  const [file, setFile] = useState("");
   const [formDetails, setFormDetails] = useState({
     password: "",
     newpassword: "",
@@ -26,8 +25,7 @@ function ChangePassword() {
   const getUser = async () => {
     try {
       dispatch(setLoading(true));
-      const temp = await fetchData(`/user/getuser/${userId}`);
-      setFile(temp.pic);
+      await fetchData(`/user/getuser/${userId}`);
       dispatch(setLoading(false));
     } catch (error) {
       dispatch(setLoading(false));
@@ -38,7 +36,8 @@ function ChangePassword() {
 
   useEffect(() => {
     getUser();
-  }, [dispatch]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const inputChange = (e) => {
     const { name, value } = e.target;

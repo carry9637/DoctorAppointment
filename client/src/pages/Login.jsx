@@ -19,7 +19,6 @@ function Login() {
     role: "",
   });
   const navigate = useNavigate();
-  const [userRole, setUserRole] = useState("");
   const inputChange = (e) => {
     const { name, value } = e.target;
     return setFormDetails({

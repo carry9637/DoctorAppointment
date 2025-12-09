@@ -39,7 +39,7 @@ const AdminDoctors = () => {
         "Are you sure you want to delete this doctor?"
       );
       if (confirm) {
-        const response = await axios.put(
+        await axios.put(
           "/doctor/deletedoctor",
           { userId: doctorUserId },
           {
@@ -60,6 +60,7 @@ const AdminDoctors = () => {
 
   useEffect(() => {
     getAllDoctors();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const filteredDoctors = doctors.filter(

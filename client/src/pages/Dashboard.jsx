@@ -1,6 +1,5 @@
 import React from "react";
 import AdminApplications from "../components/AdminApplications";
-import AdminAppointments from "../components/AdminAppointments";
 import AdminDoctors from "../components/AdminDoctors";
 import AdminSidebar from "../components/AdminSidebar";
 import AdminUsers from "../components/AdminUsers";

@@ -48,7 +48,8 @@ function Aprofile() {
 
   useEffect(() => {
     getUser();
-  }, [dispatch]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const inputChange = (e) => {
     const { name, value } = e.target;

@@ -9,11 +9,9 @@ import jwt_decode from "jwt-decode";
 import axios from "axios";
 import {
   FaCheckCircle,
-  FaClock,
   FaCalendar,
   FaUser,
   FaPhone,
-  FaStethoscope,
 } from "react-icons/fa";
 import "../styles/doctor-dashboard.css";
 
@@ -64,6 +62,7 @@ const Appointments = () => {
 
   useEffect(() => {
     getAllAppoint();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const filteredAppointments = appointments.filter(

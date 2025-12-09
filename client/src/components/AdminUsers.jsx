@@ -6,7 +6,7 @@ import { setLoading } from "../redux/reducers/rootSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Empty from "./Empty";
 import fetchData from "../helper/apiCall";
-import { FaSearch, FaTrash } from "react-icons/fa";
+import { FaTrash } from "react-icons/fa";
 import "../styles/admin-dashboard.css";
 
 axios.defaults.baseURL = process.env.REACT_APP_SERVER_DOMAIN;
@@ -60,6 +60,7 @@ const AdminUsers = () => {
 
   useEffect(() => {
     getAllUsers();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const filteredUsers = users.filter(

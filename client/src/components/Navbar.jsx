@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import "../styles/navbar.css";
 import { HashLink } from "react-router-hash-link";
@@ -17,8 +17,6 @@ const Navbar = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem("token") || "";
   const user = token ? jwt_decode(token) : null;
-
-  const{userInfo} = useSelector((state)=>state.root);
   
 
   const logoutFunc = () => {
