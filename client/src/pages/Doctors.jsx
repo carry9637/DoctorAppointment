@@ -9,7 +9,7 @@ import Loading from "../components/Loading";
 import { useDispatch, useSelector } from "react-redux";
 import { setLoading } from "../redux/reducers/rootSlice";
 import Empty from "../components/Empty";
-import { FaStethoscope } from "react-icons/fa";
+import { FaStethoscope, FaSearch } from "react-icons/fa";
 
 const Doctors = () => {
   const [doctors, setDoctors] = useState([]);
