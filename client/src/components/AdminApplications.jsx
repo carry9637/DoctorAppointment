@@ -17,10 +17,13 @@ const AdminApplications = () => {
   const getAllApp = async (e) => {
     try {
       dispatch(setLoading(true));
+      console.log("Fetching applications...");
       const temp = await fetchData(`/doctor/getallapplications`);
+      console.log("Applications fetched:", temp);
       setApplications(Array.isArray(temp) ? temp : []);
       dispatch(setLoading(false));
     } catch (error) {
+      console.error("Error fetching applications:", error);
       dispatch(setLoading(false));
       setApplications([]);
       toast.error("Failed to load applications");
@@ -34,7 +37,7 @@ const AdminApplications = () => {
       );
       if (confirm) {
         await toast.promise(
-          axios.patch(
+          axios.put(
             "/doctor/approveddoctor",
             { id: userId },
             {
@@ -52,6 +55,7 @@ const AdminApplications = () => {
         getAllApp();
       }
     } catch (error) {
+      console.error("Approval error:", error);
       toast.error("Error approving application");
       return error;
     }
@@ -64,7 +68,7 @@ const AdminApplications = () => {
       );
       if (confirm) {
         await toast.promise(
-          axios.patch(
+          axios.put(
             "/doctor/rejectedapplication",
             { id: userId },
             {
@@ -82,6 +86,7 @@ const AdminApplications = () => {
         getAllApp();
       }
     } catch (error) {
+      console.error("Rejection error:", error);
       toast.error("Error rejecting application");
       return error;
     }

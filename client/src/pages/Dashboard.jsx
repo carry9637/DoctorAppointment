@@ -23,8 +23,6 @@ const Dashboard = (props) => {
         <AdminDoctors />
       ) : type === "applications" ? (
         <AdminApplications />
-      ) : type === "appointments" ? (
-        <AdminAppointments />
       ) : type === "aprofile" ? (
         <Aprofile />
       ) : (

@@ -11,7 +11,7 @@ import React, { lazy, Suspense } from "react";
 import Loading from "./components/Loading";
 import Dashboard from "./pages/Dashboard";
 
-const Aprofile = lazy(()=>import("./components/Aprofile"))
+const Aprofile = lazy(() => import("./components/Aprofile"));
 const Home = lazy(() => import("./pages/Home"));
 const Appointments = lazy(() => import("./pages/Appointments"));
 const Doctors = lazy(() => import("./pages/Doctors"));
@@ -28,7 +28,6 @@ function App() {
     <Router>
       <Toaster />
       <Suspense fallback={<Loading />}>
-
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/forgotpassword" element={<ForgotPassword />} />
@@ -41,7 +40,10 @@ function App() {
               </Public>
             }
           />
-          <Route path="/" element={<Home />} />
+          <Route
+            path="/"
+            element={localStorage.getItem("token") ? <Home /> : <Login />}
+          />
           <Route path="/doctors" element={<Doctors />} />
           <Route
             path="/appointments"
@@ -87,7 +89,7 @@ function App() {
             path="/dashboard/home"
             element={
               <Admin>
-                <Dashboard type ={"home"} />
+                <Dashboard type={"home"} />
               </Admin>
             }
           />

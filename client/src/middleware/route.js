@@ -4,27 +4,17 @@ import jwtDecode from "jwt-decode";
 export const Protected = ({ children }) => {
   const token = localStorage.getItem("token");
   if (!token) {
-    return (
-      <Navigate
-        to={"/"}
-        replace={true}
-      ></Navigate>
-    );
+    return <Navigate to={"/login"} replace={true}></Navigate>;
   }
   return children;
 };
 
 export const Public = ({ children }) => {
   const token = localStorage.getItem("token");
-  if (!token) {
-    return children;
+  if (token) {
+    return <Navigate to={"/"} replace={true}></Navigate>;
   }
-  return (
-    <Navigate
-      to={"/"}
-      replace={true}
-    ></Navigate>
-  );
+  return children;
 };
 
 // export const Admin = ({ children }) => {
@@ -43,12 +33,7 @@ export const Public = ({ children }) => {
 export const Admin = ({ children }) => {
   const token = localStorage.getItem("token");
   if (!token) {
-    return (
-      <Navigate
-        to={"/"}
-        replace={true}
-      ></Navigate>
-    );
+    return <Navigate to={"/"} replace={true}></Navigate>;
   }
   return children;
 };

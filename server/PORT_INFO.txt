@@ -1,0 +1,25 @@
+PORT CONFLICT RESOLUTION
+========================
+
+The server now automatically finds an available port if 5020 is in use.
+
+If you encounter port issues:
+
+1. WINDOWS - Kill process on port 5020:
+   netstat -ano | findstr :5020
+   taskkill /PID <PID> /F
+
+2. MAC/LINUX - Kill process on port 5020:
+   lsof -i :5020
+   kill -9 <PID>
+
+3. The server will now:
+   - Try port 5020 first (from .env)
+   - Automatically find next available port (5021, 5022, etc.)
+   - Display the active port in console
+
+4. Update client .env to match the port shown in server console
+
+Default setup:
+- Server: PORT=5020 (or auto-finds available)
+- Client: REACT_APP_SERVER_DOMAIN=http://localhost:5020/api

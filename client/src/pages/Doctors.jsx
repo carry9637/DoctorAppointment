@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import DoctorCard from "../components/DoctorCard";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
@@ -8,16 +9,21 @@ import Loading from "../components/Loading";
 import { useDispatch, useSelector } from "react-redux";
 import { setLoading } from "../redux/reducers/rootSlice";
 import Empty from "../components/Empty";
+import { FaStethoscope, FaSearch } from "react-icons/fa";
 
 const Doctors = () => {
   const [doctors, setDoctors] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredDoctors, setFilteredDoctors] = useState([]);
   const dispatch = useDispatch();
   const { loading } = useSelector((state) => state.root);
+  const navigate = useNavigate();
 
   const fetchAllDocs = async () => {
     dispatch(setLoading(true));
     const data = await fetchData(`/doctor/getalldoctors`);
     setDoctors(data);
+    setFilteredDoctors(data);
     dispatch(setLoading(false));
   };
 
@@ -25,28 +31,61 @@ const Doctors = () => {
     fetchAllDocs();
   }, []);
 
+  const handleSearch = (value) => {
+    setSearchTerm(value);
+    const filtered = doctors.filter(
+      (doctor) =>
+        doctor.specialization?.toLowerCase().includes(value.toLowerCase()) ||
+        doctor.userId?.firstname?.toLowerCase().includes(value.toLowerCase()) ||
+        doctor.userId?.lastname?.toLowerCase().includes(value.toLowerCase())
+    );
+    setFilteredDoctors(filtered);
+  };
+
   return (
     <>
       <Navbar />
-      {loading && <Loading />}
-      {!loading && (
-        <section className="container doctors">
-          <h2 className="page-heading">Our Doctors</h2>
-          {doctors.length > 0 ? (
-            <div className="doctors-card-container">
-              {doctors.map((ele) => {
-                return (
-                  <DoctorCard
-                    ele={ele}
-                    key={ele._id}
-                  />
-                );
-              })}
+      {loading ? (
+        <Loading />
+      ) : (
+        <div className="doctors-page">
+          <div className="doctors-header">
+            <div className="doctors-header-content">
+              <div className="header-icon">
+                <FaStethoscope />
+              </div>
+              <div>
+                <h1>Find Our Doctors</h1>
+                <p>Choose from our team of expert medical professionals</p>
+              </div>
             </div>
-          ) : (
-            <Empty />
-          )}
-        </section>
+          </div>
+
+          <div className="doctors-container">
+            <div className="search-section">
+              <div className="search-box">
+                <FaSearch className="search-icon" />
+                <input
+                  type="text"
+                  placeholder="Search by specialization or doctor name..."
+                  value={searchTerm}
+                  onChange={(e) => handleSearch(e.target.value)}
+                  className="search-input"
+                />
+              </div>
+            </div>
+
+            {filteredDoctors.length > 0 ? (
+              <div className="doctors-grid">
+                {filteredDoctors.map((ele) => {
+                  return <DoctorCard ele={ele} key={ele._id} />;
+                })}
+              </div>
+            ) : (
+              <Empty />
+            )}
+          </div>
+        </div>
       )}
       <Footer />
     </>

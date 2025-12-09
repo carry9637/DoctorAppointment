@@ -39,7 +39,9 @@ const ApplyDoctor = () => {
       dispatch(setLoading(false));
     } catch (error) {
       dispatch(setLoading(false));
-      console.log("No existing application");
+      // If no profile exists, that's ok - user can create new
+      console.log("No existing doctor profile found");
+      setExistingApplication(null);
     }
   };
 
@@ -72,19 +74,27 @@ const ApplyDoctor = () => {
 
       if (existingApplication) {
         // Update existing
-        await axios.put("/doctor/updatedoctorprofile", formDetails, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
+        const updateResponse = await axios.put(
+          "/doctor/updatedoctorprofile",
+          formDetails,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
         toast.success("Doctor profile updated successfully");
       } else {
         // Create new
-        await axios.post("/doctor/applyfordoctor", formDetails, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
+        const applyResponse = await axios.post(
+          "/doctor/applyfordoctor",
+          formDetails,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
         toast.success("Doctor application sent successfully");
       }
 
@@ -94,10 +104,18 @@ const ApplyDoctor = () => {
     } catch (error) {
       dispatch(setLoading(false));
       console.error("Error details:", error.response?.data || error.message);
-      const errorMsg =
-        error.response?.data ||
-        error.message ||
-        "Unable to process application";
+
+      let errorMsg = "Unable to process application";
+
+      if (error.response?.status === 404) {
+        errorMsg =
+          "Doctor profile not found. Please try again or contact support.";
+      } else if (error.response?.status === 400) {
+        errorMsg = error.response?.data || "Application already exists";
+      } else if (error.response?.data) {
+        errorMsg = error.response.data;
+      }
+
       toast.error(errorMsg);
     }
   };

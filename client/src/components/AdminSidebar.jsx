@@ -109,21 +109,6 @@ const AdminSidebar = () => {
 
           <li className="sidebar-menu-item">
             <Link
-              to="/dashboard/appointments"
-              className={`sidebar-menu-link ${isActive(
-                "/dashboard/appointments"
-              )}`}
-              onClick={closeSidebar}
-            >
-              <span className="sidebar-menu-icon">
-                <FaCalendar />
-              </span>
-              <span>Appointments</span>
-            </Link>
-          </li>
-
-          <li className="sidebar-menu-item">
-            <Link
               to="/dashboard/applications"
               className={`sidebar-menu-link ${isActive(
                 "/dashboard/applications"

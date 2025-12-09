@@ -1,8 +1,15 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import image from "../images/heroimg.jpg";
 import "../styles/hero.css";
 
 const Hero = () => {
+  const navigate = useNavigate();
+
+  const handleBookAppointment = () => {
+    navigate("/doctors");
+  };
+
   return (
     <section className="hero">
       <div className="hero-overlay"></div>
@@ -34,8 +41,12 @@ const Hero = () => {
           </div>
         </div>
         <div className="hero-buttons">
-          <button className="btn primary-btn">Book Appointment</button>
-          <button className="btn secondary-btn">Find Doctors</button>
+          <button className="btn primary-btn" onClick={handleBookAppointment}>
+            Book Appointment
+          </button>
+          <button className="btn secondary-btn" onClick={handleBookAppointment}>
+            Find Doctors
+          </button>
         </div>
       </div>
       <div className="hero-image">

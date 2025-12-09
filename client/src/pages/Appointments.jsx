@@ -13,6 +13,7 @@ import {
   FaCalendar,
   FaUser,
   FaPhone,
+  FaStethoscope,
 } from "react-icons/fa";
 import "../styles/doctor-dashboard.css";
 
@@ -23,25 +24,40 @@ const Appointments = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const dispatch = useDispatch();
   const { loading } = useSelector((state) => state.root);
-  const { userId } = jwt_decode(localStorage.getItem("token"));
+  const token = localStorage.getItem("token");
+  const decodedToken = jwt_decode(token);
+  const { userId, role } = decodedToken;
+  const isDoctor = role === "Doctor";
 
   const getAllAppoint = async () => {
     try {
       dispatch(setLoading(true));
-      // Get all appointments and filter for doctor's appointments
-      const temp = await fetchData(
-        `/appointment/getallappointments?doctorId=${userId}`
-      );
-      setAppointments(
-        Array.isArray(temp)
-          ? temp.filter((app) => app.status !== "Completed")
-          : []
-      );
+      let temp;
+
+      if (isDoctor) {
+        // Doctor sees appointments from patients
+        temp = await fetchData(
+          `/appointment/getallappointments?doctorId=${userId}`
+        );
+        setAppointments(
+          Array.isArray(temp)
+            ? temp.filter((app) => app.status !== "Completed")
+            : []
+        );
+      } else {
+        // Patient sees their own services/appointments
+        temp = await fetchData(`/appointment/getallappointments`);
+        setAppointments(
+          Array.isArray(temp)
+            ? temp.filter((app) => app.userId?._id === userId)
+            : []
+        );
+      }
       dispatch(setLoading(false));
     } catch (error) {
       dispatch(setLoading(false));
       console.error("Error fetching appointments:", error);
-      toast.error("Failed to fetch appointments. Please try again.");
+      toast.error("Failed to fetch data. Please try again.");
       setAppointments([]);
     }
   };
@@ -54,7 +70,8 @@ const Appointments = () => {
     (app) =>
       app.userId?.firstname?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       app.userId?.lastname?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      app.userId?.email?.toLowerCase().includes(searchTerm.toLowerCase())
+      app.userId?.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      app.doctorId?.firstname?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const completeAppointment = async (appointment) => {
@@ -97,14 +114,20 @@ const Appointments = () => {
         ) : (
           <div className="doctor-main">
             <div className="doctor-header">
-              <div className="header-title">📅 Your Appointments</div>
+              <div className="header-title">
+                {isDoctor ? "📅 Patient Appointments" : "🏥 My Services"}
+              </div>
             </div>
 
             <div className="doctor-content">
               <div className="data-section">
                 <div className="section-header">
                   <div>
-                    <div className="section-title">Pending Appointments</div>
+                    <div className="section-title">
+                      {isDoctor
+                        ? "Pending Appointments"
+                        : "Your Booked Services"}
+                    </div>
                     <div
                       style={{
                         color: "var(--text-light)",
@@ -118,7 +141,11 @@ const Appointments = () => {
                   </div>
                   <input
                     type="text"
-                    placeholder="Search by patient name or email"
+                    placeholder={
+                      isDoctor
+                        ? "Search by patient name or email"
+                        : "Search by doctor name"
+                    }
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     style={{
@@ -138,52 +165,93 @@ const Appointments = () => {
                       <table className="data-table">
                         <thead>
                           <tr>
-                            <th>Patient</th>
-                            <th>Email</th>
-                            <th>Phone</th>
-                            <th>Age</th>
-                            <th>Gender</th>
-                            <th>Blood Group</th>
-                            <th>Date</th>
-                            <th>Status</th>
-                            <th>Action</th>
+                            {isDoctor ? (
+                              <>
+                                <th>Patient</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Age</th>
+                                <th>Gender</th>
+                                <th>Blood Group</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                              </>
+                            ) : (
+                              <>
+                                <th>Doctor</th>
+                                <th>Specialization</th>
+                                <th>Phone</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Consultation Fee</th>
+                              </>
+                            )}
                           </tr>
                         </thead>
                         <tbody>
                           {filteredAppointments.map((appointment) => (
                             <tr key={appointment._id}>
-                              <td>
-                                <strong>
-                                  {appointment.userId?.firstname}{" "}
-                                  {appointment.userId?.lastname}
-                                </strong>
-                              </td>
-                              <td>{appointment.userId?.email}</td>
-                              <td>{appointment.number}</td>
-                              <td>{appointment.age}</td>
-                              <td>{appointment.gender}</td>
-                              <td>{appointment.bloodGroup}</td>
-                              <td>{appointment.date}</td>
-                              <td>
-                                <span className="status-badge status-pending">
-                                  <FaClock style={{ marginRight: "5px" }} />
-                                  Pending
-                                </span>
-                              </td>
-                              <td>
-                                <button
-                                  className="btn btn-success"
-                                  onClick={() =>
-                                    completeAppointment(appointment)
-                                  }
-                                  style={{
-                                    fontSize: "0.85rem",
-                                    padding: "6px 12px",
-                                  }}
-                                >
-                                  <FaCheckCircle /> Complete
-                                </button>
-                              </td>
+                              {isDoctor ? (
+                                <>
+                                  <td>
+                                    <strong>
+                                      {appointment.userId?.firstname}{" "}
+                                      {appointment.userId?.lastname}
+                                    </strong>
+                                  </td>
+                                  <td>{appointment.userId?.email}</td>
+                                  <td>{appointment.number}</td>
+                                  <td>{appointment.age}</td>
+                                  <td>{appointment.gender}</td>
+                                  <td>{appointment.bloodGroup}</td>
+                                  <td>{appointment.date}</td>
+                                  <td>
+                                    <span className="status-badge status-pending">
+                                      Pending
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <button
+                                      className="btn btn-success"
+                                      onClick={() =>
+                                        completeAppointment(appointment)
+                                      }
+                                    >
+                                      Complete
+                                    </button>
+                                  </td>
+                                </>
+                              ) : (
+                                <>
+                                  <td>
+                                    <strong>
+                                      Dr. {appointment.doctorId?.firstname}{" "}
+                                      {appointment.doctorId?.lastname}
+                                    </strong>
+                                  </td>
+                                  <td>
+                                    {appointment.doctorId?.specialization ||
+                                      "N/A"}
+                                  </td>
+                                  <td>{appointment.number}</td>
+                                  <td>{appointment.date}</td>
+                                  <td>
+                                    <span
+                                      className={`status-badge ${
+                                        appointment.status === "Completed"
+                                          ? "status-completed"
+                                          : "status-pending"
+                                      }`}
+                                    >
+                                      {appointment.status}
+                                    </span>
+                                  </td>
+                                  <td>
+                                    ₹{appointment.doctorId?.fees || "N/A"}
+                                  </td>
+                                </>
+                              )}
                             </tr>
                           ))}
                         </tbody>
