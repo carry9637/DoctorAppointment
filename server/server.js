@@ -14,6 +14,8 @@ const notificationRouter = require("./routes/notificationRouter");
 const app = express();
 let port = process.env.PORT || 5020;
 
+app.use(express.json({ limit: "10mb" }));
+
 app.use(
   cors({
     origin: [
@@ -28,11 +30,12 @@ app.use(
       "https://*.vercel.app",
     ],
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
-app.use(express.json());
+
+app.options("*", cors());
 app.use("/api/user", userRouter);
 app.use("/api/doctor", doctorRouter);
 app.use("/api/appointment", appointRouter);
