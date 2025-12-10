@@ -9,9 +9,9 @@ require("dotenv").config();
 const getuser = async (req, res) => {
   try {
     const user = await User.findById(req.params.id).select("-password");
-    return res.send(user);
+    return res.status(200).json(user);
   } catch (error) {
-    res.status(500).send("Unable to get user");
+    res.status(500).json({ message: "Unable to get user" });
   }
 };
 
@@ -20,9 +20,9 @@ const getallusers = async (req, res) => {
     const users = await User.find()
       .find({ _id: { $ne: req.locals } })
       .select("-password");
-    return res.send(users);
+    return res.status(200).json(users);
   } catch (error) {
-    res.status(500).send("Unable to get all users");
+    res.status(500).json({ message: "Unable to get all users" });
   }
 };
 
@@ -30,17 +30,17 @@ const login = async (req, res) => {
   try {
     const emailPresent = await User.findOne({ email: req.body.email });
     if (!emailPresent) {
-      return res.status(400).send("Incorrect credentials");
+      return res.status(400).json({ message: "Incorrect credentials" });
     }
     if (emailPresent.role != req.body.role) {
-      return res.status(404).send("Role does not exist");
+      return res.status(404).json({ message: "Role does not exist" });
     }
     const verifyPass = await bcrypt.compare(
       req.body.password,
       emailPresent.password
     );
     if (!verifyPass) {
-      return res.status(400).send("Incorrect credentials");
+      return res.status(400).json({ message: "Incorrect credentials" });
     }
     const token = jwt.sign(
       {
@@ -53,9 +53,11 @@ const login = async (req, res) => {
         expiresIn: "2 days",
       }
     );
-    return res.status(201).send({ msg: "User logged in successfully", token });
+    return res
+      .status(201)
+      .json({ message: "User logged in successfully", token });
   } catch (error) {
-    res.status(500).send("Unable to login user");
+    res.status(500).json({ message: "Unable to login user" });
   }
 };
 
@@ -101,12 +103,12 @@ const updateprofile = async (req, res) => {
       { new: true }
     );
     if (!result) {
-      return res.status(500).send("Unable to update user");
+      return res.status(500).json({ message: "Unable to update user" });
     }
-    return res.status(201).send("User updated successfully");
+    return res.status(201).json({ message: "User updated successfully" });
   } catch (error) {
     console.error("Error updating profile:", error);
-    res.status(500).send("Unable to update user");
+    res.status(500).json({ message: "Unable to update user" });
   }
 };
 const changepassword = async (req, res) => {
@@ -116,12 +118,12 @@ const changepassword = async (req, res) => {
       req.body;
     // console.log("Received newPassword:", newPassword);
     if (newPassword !== confirmNewPassword) {
-      return res.status(400).send("Passwords do not match");
+      return res.status(400).json({ message: "Passwords do not match" });
     }
 
     const user = await User.findById(userId);
     if (!user) {
-      return res.status(404).send("User not found");
+      return res.status(404).json({ message: "User not found" });
     }
 
     const isPasswordMatch = await bcrypt.compare(
@@ -129,7 +131,7 @@ const changepassword = async (req, res) => {
       user.password
     );
     if (!isPasswordMatch) {
-      return res.status(400).send("Incorrect current password");
+      return res.status(400).json({ message: "Incorrect current password" });
     }
 
     const saltRounds = 10;
@@ -141,10 +143,10 @@ const changepassword = async (req, res) => {
     user.password = hashedNewPassword;
     await user.save();
 
-    return res.status(200).send("Password changed successfully");
+    return res.status(200).json({ message: "Password changed successfully" });
   } catch (error) {
     console.error(error);
-    return res.status(500).send("Internal Server Error");
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
@@ -157,9 +159,9 @@ const deleteuser = async (req, res) => {
     const removeAppoint = await Appointment.findOneAndDelete({
       userId: req.body.userId,
     });
-    return res.send("User deleted successfully");
+    return res.status(200).json({ message: "User deleted successfully" });
   } catch (error) {
-    res.status(500).send("Unable to delete user");
+    res.status(500).json({ message: "Unable to delete user" });
   }
 };
 
@@ -169,7 +171,7 @@ const forgotpassword = async (req, res) => {
     const user = await User.findOne({ email });
     // console.log(user,email);
     if (!user) {
-      return res.status(404).send({ status: "User not found" });
+      return res.status(404).json({ message: "User not found" });
     }
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
@@ -196,14 +198,14 @@ const forgotpassword = async (req, res) => {
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
         console.log(error);
-        return res.status(500).send({ status: "Error sending email" });
+        return res.status(500).json({ message: "Error sending email" });
       } else {
-        return res.status(200).send({ status: "Email sent successfully" });
+        return res.status(200).json({ message: "Email sent successfully" });
       }
     });
   } catch (error) {
     console.error(error);
-    return res.status(500).send({ status: "Internal Server Error" });
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
@@ -216,21 +218,21 @@ const resetpassword = async (req, res) => {
     jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
       if (err) {
         console.log(err);
-        return res.status(400).send({ error: "Invalid or expired token" });
+        return res.status(400).json({ message: "Invalid or expired token" });
       }
 
       try {
         const hashedPassword = await bcrypt.hash(password, 10);
         await User.findByIdAndUpdate(id, { password: hashedPassword });
-        return res.status(200).send({ success: "Password reset successfully" });
+        return res.status(200).json({ message: "Password reset successfully" });
       } catch (updateError) {
         console.error("Error updating password:", updateError);
-        return res.status(500).send({ error: "Failed to update password" });
+        return res.status(500).json({ message: "Failed to update password" });
       }
     });
   } catch (error) {
     console.error(error);
-    return res.status(500).send({ error: "Internal Server Error" });
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
