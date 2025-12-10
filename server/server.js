@@ -24,7 +24,7 @@ app.use(
       "https://doctor-appoinment-2025.netlify.app",
       "https://*.netlify.app",
       "https://client-gxi227iww-kartikpaul366-4615s-projects.vercel.app",
-      "https://*.vercel.app"
+      "https://*.vercel.app",
     ],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
