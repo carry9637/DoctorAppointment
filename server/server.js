@@ -16,25 +16,7 @@ let port = process.env.PORT || 5020;
 
 app.use(express.json({ limit: "10mb" }));
 
-app.use(
-  cors({
-    origin: [
-      "http://localhost:3000",
-      "http://localhost:3001",
-      "http://localhost:3003",
-      "http://localhost:3004",
-      "https://doctor-appoinment-2025.netlify.app",
-      "https://*.netlify.app",
-      "https://client-gxi227iww-kartikpaul366-4615s-projects.vercel.app",
-      "https://client-hwx2yz9ms-kartikpaul366-4615s-projects.vercel.app",
-      "https://*.vercel.app",
-    ],
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
-);
-
+app.use(cors());
 app.options("*", cors());
 app.use("/api/user", userRouter);
 app.use("/api/doctor", doctorRouter);
