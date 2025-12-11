@@ -191,7 +191,7 @@ const forgotpassword = async (req, res) => {
       from: "tarun.kumar.csbs25@heritageit.edu.in",
       to: email,
       subject: "Reset Password Link",
-      text: `https://appointmentdoctor.netlify.app/resetpassword/${user._id}/${token}`,
+      text: `https://doctor-appointment-uezq.vercel.app/resetpassword/${user._id}/${token}`,
     };
     // console.log(mailOptions);
 

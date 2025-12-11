@@ -59,7 +59,7 @@ function Login() {
       localStorage.setItem("token", data.token);
       dispatch(setUserInfo(jwt_decode(data.token).userId));
       setUserRole(role);
-      getUser(jwt_decode(data.token).userId, role);
+      await getUser(jwt_decode(data.token).userId, role);
     } catch (error) {
       return error;
     }
