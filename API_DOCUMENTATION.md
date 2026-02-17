@@ -6,7 +6,9 @@
 ---
 
 ## 🔐 Authentication
+
 All protected endpoints require a JWT token in the `Authorization` header:
+
 ```
 Authorization: Bearer <token>
 ```
@@ -16,9 +18,11 @@ Authorization: Bearer <token>
 ## 👤 USER ENDPOINTS
 
 ### 1. Register User
+
 **POST** `/user/register`
 
 **Request Body:**
+
 ```json
 {
   "firstname": "John",
@@ -31,6 +35,7 @@ Authorization: Bearer <token>
 ```
 
 **Response (201):**
+
 ```json
 {
   "message": "User registered successfully",
@@ -47,9 +52,11 @@ Authorization: Bearer <token>
 ---
 
 ### 2. Login User
+
 **POST** `/user/login`
 
 **Request Body:**
+
 ```json
 {
   "email": "john@example.com",
@@ -59,6 +66,7 @@ Authorization: Bearer <token>
 ```
 
 **Response (201):**
+
 ```json
 {
   "message": "User logged in successfully",
@@ -69,14 +77,17 @@ Authorization: Bearer <token>
 ---
 
 ### 3. Get User Profile
+
 **GET** `/user/getuser/:userId`
 
 **Headers:**
+
 ```
 Authorization: Bearer <token>
 ```
 
 **Response (200):**
+
 ```json
 {
   "_id": "user_id",
@@ -91,14 +102,17 @@ Authorization: Bearer <token>
 ---
 
 ### 4. Get All Users
+
 **GET** `/user/getallusers`
 
 **Headers:**
+
 ```
 Authorization: Bearer <token>
 ```
 
 **Response (200):**
+
 ```json
 [
   {
@@ -114,14 +128,17 @@ Authorization: Bearer <token>
 ---
 
 ### 5. Update Profile
+
 **PUT** `/user/updateprofile`
 
 **Headers:**
+
 ```
 Authorization: Bearer <token>
 ```
 
 **Request Body:**
+
 ```json
 {
   "firstname": "John",
@@ -135,6 +152,7 @@ Authorization: Bearer <token>
 ```
 
 **Response (201):**
+
 ```json
 {
   "message": "User updated successfully"
@@ -144,9 +162,11 @@ Authorization: Bearer <token>
 ---
 
 ### 6. Change Password
+
 **POST** `/user/changepassword`
 
 **Request Body:**
+
 ```json
 {
   "userId": "user_id",
@@ -157,6 +177,7 @@ Authorization: Bearer <token>
 ```
 
 **Response (200):**
+
 ```json
 {
   "message": "Password changed successfully"
@@ -166,9 +187,11 @@ Authorization: Bearer <token>
 ---
 
 ### 7. Forgot Password
+
 **POST** `/user/forgotpassword`
 
 **Request Body:**
+
 ```json
 {
   "email": "john@example.com"
@@ -176,6 +199,7 @@ Authorization: Bearer <token>
 ```
 
 **Response (200):**
+
 ```json
 {
   "message": "Email sent successfully"
@@ -185,9 +209,11 @@ Authorization: Bearer <token>
 ---
 
 ### 8. Reset Password
+
 **POST** `/user/resetpassword/:id/:token`
 
 **Request Body:**
+
 ```json
 {
   "password": "new_password"
@@ -195,6 +221,7 @@ Authorization: Bearer <token>
 ```
 
 **Response (200):**
+
 ```json
 {
   "message": "Password reset successfully"
@@ -204,9 +231,11 @@ Authorization: Bearer <token>
 ---
 
 ### 9. Delete User
+
 **DELETE** `/user/deleteuser`
 
 **Request Body:**
+
 ```json
 {
   "userId": "user_id"
@@ -214,6 +243,7 @@ Authorization: Bearer <token>
 ```
 
 **Response (200):**
+
 ```json
 {
   "message": "User deleted successfully"
@@ -225,14 +255,17 @@ Authorization: Bearer <token>
 ## 👨‍⚕️ DOCTOR ENDPOINTS
 
 ### 1. Apply as Doctor
+
 **POST** `/doctor/applydoctor`
 
 **Headers:**
+
 ```
 Authorization: Bearer <token>
 ```
 
 **Request Body:**
+
 ```json
 {
   "userId": "user_id",
@@ -244,6 +277,7 @@ Authorization: Bearer <token>
 ```
 
 **Response (201):**
+
 ```json
 {
   "message": "Doctor application submitted successfully"
@@ -253,9 +287,11 @@ Authorization: Bearer <token>
 ---
 
 ### 2. Get All Doctors
+
 **GET** `/doctor/getalldoctors`
 
 **Response (200):**
+
 ```json
 [
   {
@@ -276,14 +312,17 @@ Authorization: Bearer <token>
 ---
 
 ### 3. Get Pending Doctor Applications
+
 **GET** `/doctor/getpendingdoctors`
 
 **Headers:**
+
 ```
 Authorization: Bearer <token>
 ```
 
 **Response (200):**
+
 ```json
 [
   {
@@ -298,9 +337,11 @@ Authorization: Bearer <token>
 ---
 
 ### 4. Approve Doctor Application
+
 **POST** `/doctor/approvedoctor`
 
 **Request Body:**
+
 ```json
 {
   "docId": "doctor_id"
@@ -308,6 +349,7 @@ Authorization: Bearer <token>
 ```
 
 **Response (200):**
+
 ```json
 {
   "message": "Doctor approved successfully"
@@ -317,9 +359,11 @@ Authorization: Bearer <token>
 ---
 
 ### 5. Reject Doctor Application
+
 **POST** `/doctor/rejectdoctor`
 
 **Request Body:**
+
 ```json
 {
   "docId": "doctor_id"
@@ -327,6 +371,7 @@ Authorization: Bearer <token>
 ```
 
 **Response (200):**
+
 ```json
 {
   "message": "Doctor rejected successfully"
@@ -338,14 +383,17 @@ Authorization: Bearer <token>
 ## 📅 APPOINTMENT ENDPOINTS
 
 ### 1. Book Appointment
+
 **POST** `/appointment/bookappointment`
 
 **Headers:**
+
 ```
 Authorization: Bearer <token>
 ```
 
 **Request Body:**
+
 ```json
 {
   "doctorId": "doctor_id",
@@ -357,6 +405,7 @@ Authorization: Bearer <token>
 ```
 
 **Response (201):**
+
 ```json
 {
   "message": "Appointment booked successfully"
@@ -366,14 +415,17 @@ Authorization: Bearer <token>
 ---
 
 ### 2. Get User Appointments
+
 **GET** `/appointment/getuserappointments/:userId`
 
 **Headers:**
+
 ```
 Authorization: Bearer <token>
 ```
 
 **Response (200):**
+
 ```json
 [
   {
@@ -391,14 +443,17 @@ Authorization: Bearer <token>
 ---
 
 ### 3. Get Doctor Appointments
+
 **GET** `/appointment/getdoctorappointments/:doctorId`
 
 **Headers:**
+
 ```
 Authorization: Bearer <token>
 ```
 
 **Response (200):**
+
 ```json
 [
   {
@@ -415,9 +470,11 @@ Authorization: Bearer <token>
 ---
 
 ### 4. Mark Appointment as Completed
+
 **POST** `/appointment/markascompleted`
 
 **Request Body:**
+
 ```json
 {
   "appointmentId": "appt_id"
@@ -425,6 +482,7 @@ Authorization: Bearer <token>
 ```
 
 **Response (200):**
+
 ```json
 {
   "message": "Appointment marked as completed"
@@ -436,14 +494,17 @@ Authorization: Bearer <token>
 ## 🔔 NOTIFICATION ENDPOINTS
 
 ### 1. Get Notifications
+
 **GET** `/notification/getnotifications/:userId`
 
 **Headers:**
+
 ```
 Authorization: Bearer <token>
 ```
 
 **Response (200):**
+
 ```json
 [
   {
@@ -458,9 +519,11 @@ Authorization: Bearer <token>
 ---
 
 ### 2. Mark Notification as Read
+
 **POST** `/notification/markasread`
 
 **Request Body:**
+
 ```json
 {
   "notificationId": "notif_id"
@@ -468,6 +531,7 @@ Authorization: Bearer <token>
 ```
 
 **Response (200):**
+
 ```json
 {
   "message": "Notification marked as read"
@@ -479,6 +543,7 @@ Authorization: Bearer <token>
 ## Error Responses
 
 **400 Bad Request:**
+
 ```json
 {
   "message": "Email already exists"
@@ -486,6 +551,7 @@ Authorization: Bearer <token>
 ```
 
 **401 Unauthorized:**
+
 ```json
 {
   "message": "Invalid token"
@@ -493,6 +559,7 @@ Authorization: Bearer <token>
 ```
 
 **404 Not Found:**
+
 ```json
 {
   "message": "User not found"
@@ -500,6 +567,7 @@ Authorization: Bearer <token>
 ```
 
 **500 Internal Server Error:**
+
 ```json
 {
   "message": "Internal server error"
@@ -511,6 +579,7 @@ Authorization: Bearer <token>
 ## Test Examples
 
 ### Register
+
 ```bash
 curl -X POST https://doctorappointment-m5j2.onrender.com/api/user/register \
   -H "Content-Type: application/json" \
@@ -524,6 +593,7 @@ curl -X POST https://doctorappointment-m5j2.onrender.com/api/user/register \
 ```
 
 ### Login
+
 ```bash
 curl -X POST https://doctorappointment-m5j2.onrender.com/api/user/login \
   -H "Content-Type: application/json" \
