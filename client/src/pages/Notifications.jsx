@@ -49,130 +49,119 @@ const Notifications = () => {
       <div className="doctor-layout">
         <DoctorSidebar />
 
-        {loading ? (
-          <div className="doctor-main">
-            <div className="doctor-header">
-              <div className="header-title">Loading...</div>
-            </div>
-            <div className="doctor-content">
-              <Loading />
-            </div>
+        <div className="doctor-main">
+          <div className="doctor-header">
+            <div className="header-title">🔔 Your Notifications</div>
           </div>
-        ) : (
-          <div className="doctor-main">
-            <div className="doctor-header">
-              <div className="header-title">🔔 Your Notifications</div>
-            </div>
 
-            <div className="doctor-content">
-              <div className="data-section">
-                <div className="section-header">
-                  <div>
-                    <div className="section-title">Notifications</div>
-                    <div
-                      style={{
-                        color: "var(--text-light)",
-                        fontSize: "0.9rem",
-                        marginTop: "5px",
-                      }}
-                    >
-                      Total:{" "}
-                      {Array.isArray(notifications) ? notifications.length : 0}
-                    </div>
+          <div className="doctor-content">
+            <div className="data-section">
+              <div className="section-header">
+                <div>
+                  <div className="section-title">Notifications</div>
+                  <div
+                    style={{
+                      color: "var(--text-light)",
+                      fontSize: "0.9rem",
+                      marginTop: "5px",
+                    }}
+                  >
+                    Total:{" "}
+                    {Array.isArray(notifications) ? notifications.length : 0}
                   </div>
                 </div>
+              </div>
 
-                {Array.isArray(notifications) && notifications.length > 0 ? (
-                  <>
-                    {/* Desktop Table View */}
-                    <div className="data-table-wrapper">
-                      <table className="data-table">
-                        <thead>
-                          <tr>
-                            <th>Status</th>
-                            <th>Message</th>
-                            <th>Date</th>
-                            <th>Time</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {notifications.map((notif) => (
-                            <tr key={notif?._id}>
-                              <td>
-                                <span
-                                  className={`status-badge ${getNotificationColor(
-                                    notif?.content
-                                  )}`}
-                                >
-                                  {getNotificationIcon(notif?.content)}
-                                </span>
-                              </td>
-                              <td>{notif?.content}</td>
-                              <td>{notif?.updatedAt?.split("T")[0]}</td>
-                              <td>
-                                {notif?.updatedAt?.split("T")[1]?.split(".")[0]}
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-
-                    {/* Mobile Card View */}
-                    <div style={{ display: "none" }} className="mobile-view">
-                      {notifications.map((notif) => (
-                        <div className="mobile-card" key={notif?._id}>
-                          <div className="card-field">
-                            <span className="card-field-label">Status</span>
-                            <span className="card-field-value">
+              {Array.isArray(notifications) && notifications.length > 0 ? (
+                <>
+                  {/* Desktop Table View */}
+                  <div className="data-table-wrapper">
+                    <table className="data-table">
+                      <thead>
+                        <tr>
+                          <th>Status</th>
+                          <th>Message</th>
+                          <th>Date</th>
+                          <th>Time</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {notifications.map((notif) => (
+                          <tr key={notif?._id}>
+                            <td>
                               <span
                                 className={`status-badge ${getNotificationColor(
-                                  notif?.content
+                                  notif?.content,
                                 )}`}
                               >
                                 {getNotificationIcon(notif?.content)}
                               </span>
-                            </span>
-                          </div>
-                          <div className="card-field">
-                            <span className="card-field-label">Message</span>
-                            <span className="card-field-value">
-                              {notif?.content}
-                            </span>
-                          </div>
-                          <div className="card-field">
-                            <span className="card-field-label">
-                              <FaClock /> Date & Time
-                            </span>
-                            <span className="card-field-value">
-                              {notif?.updatedAt?.split("T")[0]}{" "}
+                            </td>
+                            <td>{notif?.content}</td>
+                            <td>{notif?.updatedAt?.split("T")[0]}</td>
+                            <td>
                               {notif?.updatedAt?.split("T")[1]?.split(".")[0]}
-                            </span>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </>
-                ) : (
-                  <div className="empty-state">
-                    <div className="empty-state-icon">📬</div>
-                    <div className="empty-state-text">No notifications yet</div>
-                    <div
-                      style={{
-                        color: "var(--text-light)",
-                        fontSize: "0.9rem",
-                        marginTop: "10px",
-                      }}
-                    >
-                      You will receive notifications about your applications and
-                      appointments here
-                    </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
                   </div>
-                )}
-              </div>
+
+                  {/* Mobile Card View */}
+                  <div style={{ display: "none" }} className="mobile-view">
+                    {notifications.map((notif) => (
+                      <div className="mobile-card" key={notif?._id}>
+                        <div className="card-field">
+                          <span className="card-field-label">Status</span>
+                          <span className="card-field-value">
+                            <span
+                              className={`status-badge ${getNotificationColor(
+                                notif?.content,
+                              )}`}
+                            >
+                              {getNotificationIcon(notif?.content)}
+                            </span>
+                          </span>
+                        </div>
+                        <div className="card-field">
+                          <span className="card-field-label">Message</span>
+                          <span className="card-field-value">
+                            {notif?.content}
+                          </span>
+                        </div>
+                        <div className="card-field">
+                          <span className="card-field-label">
+                            <FaClock /> Date & Time
+                          </span>
+                          <span className="card-field-value">
+                            {notif?.updatedAt?.split("T")[0]}{" "}
+                            {notif?.updatedAt?.split("T")[1]?.split(".")[0]}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              ) : (
+                <div className="empty-state">
+                  <div className="empty-state-icon">📬</div>
+                  <div className="empty-state-text">No notifications yet</div>
+                  <div
+                    style={{
+                      color: "var(--text-light)",
+                      fontSize: "0.9rem",
+                      marginTop: "10px",
+                    }}
+                  >
+                    You will receive notifications about your applications and
+                    appointments here
+                  </div>
+                </div>
+              )}
             </div>
           </div>
-        )}
+        </div>
       </div>
     </>
   );

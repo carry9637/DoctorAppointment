@@ -45,10 +45,18 @@ const DoctorCard = ({ ele }) => {
 
           <div className="doctor-info">
             <p>
-              <strong>Experience:</strong> {ele?.experience} years
+              <strong>Experience:</strong>{" "}
+              {ele?.experience !== undefined &&
+              ele?.experience !== null &&
+              ele?.experience !== ""
+                ? `${ele.experience} yrs`
+                : "N/A"}
             </p>
             <p>
-              <strong>Consultation Fee:</strong> ₹{ele?.fees}
+              <strong>Fee:</strong>{" "}
+              {ele?.fees !== undefined && ele?.fees !== null && ele?.fees !== ""
+                ? `₹${ele.fees}`
+                : "N/A"}
             </p>
             {ele?.userId?.mobile && (
               <p>

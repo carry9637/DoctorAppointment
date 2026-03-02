@@ -41,13 +41,13 @@ const AdminAppointments = () => {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
             },
-          }
+          },
         ),
         {
           pending: "Marking appointment complete...",
           success: "Appointment marked as completed",
           error: "Unable to update appointment",
-        }
+        },
       );
       getAllAppointments();
     } catch (error) {
@@ -59,8 +59,6 @@ const AdminAppointments = () => {
     getAllAppointments();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  if (loading) return <Loading />;
 
   return (
     <div className="admin-main">

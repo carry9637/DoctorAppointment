@@ -36,7 +36,7 @@ const AdminDoctors = () => {
   const deleteDoctor = async (doctorUserId) => {
     try {
       const confirm = window.confirm(
-        "Are you sure you want to delete this doctor?"
+        "Are you sure you want to delete this doctor?",
       );
       if (confirm) {
         await axios.put(
@@ -46,7 +46,7 @@ const AdminDoctors = () => {
             headers: {
               authorization: `Bearer ${localStorage.getItem("token")}`,
             },
-          }
+          },
         );
         toast.success("Doctor deleted successfully");
         getAllDoctors();
@@ -72,10 +72,8 @@ const AdminDoctors = () => {
         ?.toLowerCase()
         .includes(searchTerm.toLowerCase()) ||
       doctor.userId?.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      doctor.specialization?.toLowerCase().includes(searchTerm.toLowerCase())
+      doctor.specialization?.toLowerCase().includes(searchTerm.toLowerCase()),
   );
-
-  if (loading) return <Loading />;
 
   return (
     <div className="admin-main">

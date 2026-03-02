@@ -1,103 +1,143 @@
 @import url(app.css);
 
-.modal {
-  position: absolute;
-  top: 0%;
-  left: 0%;
+/* ── Two-column rows ── */
+.form-row {
+  display: flex;
+  gap: 0.55rem;
   width: 100%;
-  height: 99vh;
-  /* background-color: rgba(0, 0, 0, 0.322); */
-  z-index: 1000;
+}
+
+.form-row .form-input {
+  flex: 1;
+  min-width: 0;
+}
+
+/* ── Overlay ── */
+.modal {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(4px);
+  z-index: 2000;
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 1rem;
+  box-sizing: border-box;
 }
 
+/* ── Modal Card ── */
 .modal__content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2rem;
-  width: 25%;
-  padding: 2rem;
-  border: 1px solid var(--light-blue);
-  border-radius: 10px;
-  color: var(--light-blue);
-  background-color: rgb(30, 55, 90);
   position: relative;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  border-top: 4px solid #0066ff;
+  padding: 1.6rem 2rem 1.4rem 2rem;
+  width: 100%;
+  max-width: 480px;
+  max-height: 92vh;
+  overflow-y: auto;
+  box-sizing: border-box;
 }
 
-.modal__content h2 {
-  color: var(--light-blue);
+.modal__content::-webkit-scrollbar {
+  width: 4px;
+}
+.modal__content::-webkit-scrollbar-thumb {
+  background: #c5d3e8;
+  border-radius: 4px;
 }
 
-.modal__content .btn {
-  font-size: 0.9rem;
+/* ── Title ── */
+.page-heading {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #2c3e50;
+  text-align: center;
+  margin: 0 0 1rem 0;
 }
 
+/* ── Close button ── */
 .close-btn {
   position: absolute;
-  top: 2%;
-  right: 2%;
-  font-size: 1.5rem;
-  color: var(--secondary-color);
+  top: 1rem;
+  right: 1rem;
+  font-size: 1.4rem;
+  color: #7f8c8d;
   cursor: pointer;
+  transition: color 0.2s ease;
+  line-height: 1;
 }
 
-.book {
-  width: 80%;
+.close-btn:hover {
+  color: #e74c3c;
 }
 
-.register-container {
+/* ── Override register-container inside modal ── */
+.modal .register-container {
   background: transparent !important;
   box-shadow: none !important;
   border: none !important;
   padding: 0 !important;
   width: 100% !important;
+  gap: 0 !important;
 }
 
-.register-form {
-  gap: 1rem !important;
+.modal .register-form {
+  gap: 0.55rem !important;
 }
 
-.form-input,
-textarea,
-select {
+/* ── All inputs inside modal ── */
+.modal .form-input,
+.modal textarea,
+.modal select {
   background-color: #f8f9fa !important;
-  border: 2px solid #e9ecef !important;
+  border: 1.5px solid #e9ecef !important;
   border-radius: 8px !important;
-  padding: 0.75rem 1rem !important;
-  font-size: 0.95rem !important;
-  transition: all 0.3s ease !important;
+  padding: 0.6rem 1rem !important;
+  font-size: 0.9rem !important;
+  transition: all 0.25s ease !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
 }
 
-.form-input:focus,
-textarea:focus,
-select:focus {
+.modal .form-input:focus,
+.modal textarea:focus,
+.modal select:focus {
   outline: none !important;
-  border-color: var(--dark-blue) !important;
+  border-color: #0066ff !important;
   background-color: #ffffff !important;
-  box-shadow: 0 0 0 3px rgba(0, 171, 228, 0.1) !important;
+  box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1) !important;
 }
 
-.form-btn {
-  margin-top: 1.5rem !important;
-  padding: 0.75rem 2rem !important;
+.modal textarea.form-input {
+  resize: vertical;
+  min-height: 70px;
+  max-height: 100px;
+}
+
+/* ── Book button ── */
+.modal .form-btn {
+  margin-top: 0.6rem !important;
+  padding: 0.65rem 1.5rem !important;
   font-size: 1rem !important;
-  font-weight: 600 !important;
+  font-weight: 700 !important;
   border-radius: 8px !important;
-  background: linear-gradient(
-    135deg,
-    var(--dark-blue),
-    var(--light-blue)
-  ) !important;
-  transition: all 0.3s ease !important;
-  box-shadow: 0 4px 15px rgba(0, 107, 107, 0.3) !important;
+  background: linear-gradient(135deg, #0066ff, #0052cc) !important;
+  color: white !important;
+  transition: all 0.25s ease !important;
+  box-shadow: 0 4px 15px rgba(0, 102, 255, 0.3) !important;
+  width: 100% !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase !important;
 }
 
-.form-btn:hover {
+.modal .form-btn:hover {
   transform: translateY(-2px) !important;
-  box-shadow: 0 6px 20px rgba(0, 107, 107, 0.4) !important;
+  box-shadow: 0 6px 20px rgba(0, 102, 255, 0.4) !important;
 }
 
 @media (max-width: 600px) {

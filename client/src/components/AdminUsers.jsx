@@ -35,7 +35,7 @@ const AdminUsers = () => {
   const deleteUser = async (userId) => {
     try {
       const confirm = window.confirm(
-        "Are you sure you want to delete this user?"
+        "Are you sure you want to delete this user?",
       );
       if (confirm) {
         await toast.promise(
@@ -49,7 +49,7 @@ const AdminUsers = () => {
             pending: "Deleting user...",
             success: "User deleted successfully",
             error: "Unable to delete user",
-          }
+          },
         );
         getAllUsers();
       }
@@ -67,10 +67,8 @@ const AdminUsers = () => {
     (user) =>
       user.firstname.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.lastname.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchTerm.toLowerCase())
+      user.email.toLowerCase().includes(searchTerm.toLowerCase()),
   );
-
-  if (loading) return <Loading />;
 
   return (
     <div className="admin-main">

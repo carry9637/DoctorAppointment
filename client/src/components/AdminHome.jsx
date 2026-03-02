@@ -33,7 +33,7 @@ const AdminHome = () => {
       dispatch(setLoading(true));
       const userData = await fetchData("/user/getallusers");
       const appointmentData = await fetchData(
-        "/appointment/getallappointments"
+        "/appointment/getallappointments",
       );
       const doctorData = await fetchData("/doctor/getalldoctors");
       setUserCount(userData.length);
@@ -62,8 +62,6 @@ const AdminHome = () => {
     { category: "Total Doctors", value: doctorCount },
     { category: "Total Appointments", value: appointmentCount },
   ];
-
-  if (loading) return <Loading />;
 
   return (
     <div className="admin-main">

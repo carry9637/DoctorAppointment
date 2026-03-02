@@ -113,19 +113,6 @@ const ApplyDoctor = () => {
     }
   };
 
-  if (loading) {
-    return (
-      <>
-        <div className="doctor-layout">
-          <DoctorSidebar />
-          <div className="doctor-main">
-            <Loading />
-          </div>
-        </div>
-      </>
-    );
-  }
-
   return (
     <>
       <div className="doctor-layout">

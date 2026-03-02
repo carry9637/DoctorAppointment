@@ -48,7 +48,7 @@ const Users = () => {
             success: "User deleted successfully",
             error: "Unable to delete user",
             loading: "Deleting user...",
-          }
+          },
         );
         getAllUsers();
       }
@@ -73,90 +73,85 @@ const Users = () => {
 
   return (
     <>
-      {loading ? (
-        <Loading />
-      ) : (
-        <section className="user-section">
-          <div className="ayx">
-            <div className="filter">
-              <label htmlFor="filter">Filter by:</label>
-              <select
-                id="filter"
-                value={filter}
-                onChange={(e) => setFilter(e.target.value)}
-              >
-                <option value="all">All</option>
-                <option value="firstname">Name</option>
-
-              </select>
-            </div>
-
-            <div className="search">
-              <label htmlFor="search">Search:</label>
-              <input
-                type="text"
-                className="form-input"
-                id="search"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Search"
-              />
-            </div>
+      <section className="user-section">
+        <div className="ayx">
+          <div className="filter">
+            <label htmlFor="filter">Filter by:</label>
+            <select
+              id="filter"
+              value={filter}
+              onChange={(e) => setFilter(e.target.value)}
+            >
+              <option value="all">All</option>
+              <option value="firstname">Name</option>
+            </select>
           </div>
-          <h3 className="home-sub-heading">All Users</h3>
-          {users.length > 0 ? (
-            <div className="user-container">
-              <table>
-                <thead>
-                  <tr>
-                    <th>S.No</th>
-                    <th>Pic</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Email</th>
-                    <th>Mobile No.</th>
-                    <th>Age</th>
-                    <th>Gender</th>
-                    <th>Is Doctor</th>
-                    <th>Remove</th>
+
+          <div className="search">
+            <label htmlFor="search">Search:</label>
+            <input
+              type="text"
+              className="form-input"
+              id="search"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Search"
+            />
+          </div>
+        </div>
+        <h3 className="home-sub-heading">All Users</h3>
+        {users.length > 0 ? (
+          <div className="user-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>S.No</th>
+                  <th>Pic</th>
+                  <th>First Name</th>
+                  <th>Last Name</th>
+                  <th>Email</th>
+                  <th>Mobile No.</th>
+                  <th>Age</th>
+                  <th>Gender</th>
+                  <th>Is Doctor</th>
+                  <th>Remove</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredUsers.map((ele, i) => (
+                  <tr key={ele._id}>
+                    <td>{i + 1}</td>
+                    <td>
+                      <img
+                        className="user-table-pic"
+                        src={ele.pic}
+                        alt={ele.firstname}
+                      />
+                    </td>
+                    <td>{ele.firstname}</td>
+                    <td>{ele.lastname}</td>
+                    <td>{ele.email}</td>
+                    <td>{ele.mobile}</td>
+                    <td>{ele.age}</td>
+                    <td>{ele.gender}</td>
+                    <td>{ele.isDoctor ? "Yes" : "No"}</td>
+                    <td className="select">
+                      <button
+                        className="btn user-btn"
+                        onClick={() => deleteUser(ele._id)}
+                      >
+                        Remove
+                      </button>
+                    </td>
                   </tr>
-                </thead>
-                <tbody>
-                  {filteredUsers.map((ele, i) => (
-                    <tr key={ele._id}>
-                      <td>{i + 1}</td>
-                      <td>
-                        <img
-                          className="user-table-pic"
-                          src={ele.pic}
-                          alt={ele.firstname}
-                        />
-                      </td>
-                      <td>{ele.firstname}</td>
-                      <td>{ele.lastname}</td>
-                      <td>{ele.email}</td>
-                      <td>{ele.mobile}</td>
-                      <td>{ele.age}</td>
-                      <td>{ele.gender}</td>
-                      <td>{ele.isDoctor ? "Yes" : "No"}</td>
-                      <td className="select">
-                        <button
-                          className="btn user-btn"
-                          onClick={() => deleteUser(ele._id)}
-                        >
-                          Remove
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          ) : (
-            <Empty />
-          )}
-        </section>
-      )}
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <Empty />
+        )}
+      </section>
     </>
   );
 };

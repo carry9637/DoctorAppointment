@@ -45,7 +45,7 @@ const Home = () => {
       dispatch(setLoading(true));
       const userData = await fetchData("/user/getallusers");
       const appointmentData = await fetchData(
-        "/appointment/getallappointments"
+        "/appointment/getallappointments",
       );
       const doctorData = await fetchData("/doctor/getalldoctors");
       setUserCount(userData.length);
@@ -69,60 +69,56 @@ const Home = () => {
 
   return (
     <>
-      {loading ? (
-        <Loading />
-      ) : (
-        <section className="user-section">
-          <div>
-            <h1>Welcome To Dashboard!!!</h1>
-            <div className="main-cards">
-              <div className="card">
-                <div className="card-inner">
-                  <h3 style={{ color: "white" }}>USERS</h3>
-                  <FaUsers />
-                </div>
-                <h2 style={{ color: "white" }}>{userCount}</h2>
+      <section className="user-section">
+        <div>
+          <h1>Welcome To Dashboard!!!</h1>
+          <div className="main-cards">
+            <div className="card">
+              <div className="card-inner">
+                <h3 style={{ color: "white" }}>USERS</h3>
+                <FaUsers />
               </div>
-              <div className="card">
-                <div className="card-inner">
-                  <h3 style={{ color: "white" }}>APPOINTMENTS</h3>
-                  <BsFillGrid3X3GapFill className="card_icon" />
-                </div>
-                <h2 style={{ color: "white" }}>{appointmentCount}</h2>
-              </div>
-              <div className="card">
-                <div className="card-inner">
-                  <h3 style={{ color: "white" }}>DOCTORS</h3>
-                  <FaUserMd />
-                </div>
-                <h2 style={{ color: "white" }}>{doctorCount}</h2>
-              </div>
+              <h2 style={{ color: "white" }}>{userCount}</h2>
             </div>
-            <div className="charts">
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={data}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Bar dataKey="count" fill="#8884d8" />
-                </BarChart>
-              </ResponsiveContainer>
-              <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={data}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Line type="monotone" dataKey="count" stroke="#82ca9d" />
-                </LineChart>
-              </ResponsiveContainer>
+            <div className="card">
+              <div className="card-inner">
+                <h3 style={{ color: "white" }}>APPOINTMENTS</h3>
+                <BsFillGrid3X3GapFill className="card_icon" />
+              </div>
+              <h2 style={{ color: "white" }}>{appointmentCount}</h2>
+            </div>
+            <div className="card">
+              <div className="card-inner">
+                <h3 style={{ color: "white" }}>DOCTORS</h3>
+                <FaUserMd />
+              </div>
+              <h2 style={{ color: "white" }}>{doctorCount}</h2>
             </div>
           </div>
-        </section>
-      )}
+          <div className="charts">
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={data}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="count" fill="#8884d8" />
+              </BarChart>
+            </ResponsiveContainer>
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={data}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Line type="monotone" dataKey="count" stroke="#82ca9d" />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      </section>
     </>
   );
 };

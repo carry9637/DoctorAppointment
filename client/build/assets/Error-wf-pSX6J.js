@@ -1,0 +1,1 @@
+import{j as r,q as o}from"./index-DGEmV-4F.js";const e=()=>r.jsxs("div",{className:"error container",children:[r.jsx("h2",{children:"Error! Page Not Found"}),r.jsx(o,{to:"/",className:"btn",children:"go to home"})]});export{e as default};

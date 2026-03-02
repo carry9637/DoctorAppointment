@@ -30,34 +30,49 @@ function Register() {
   };
 
   const onUpload = async (element) => {
-    setLoading(true);
+    if (!element) return;
+
     if (
       element.type === "image/jpeg" ||
       element.type === "image/png" ||
       element.type === "image/jpg"
     ) {
-      const data = new FormData();
-      data.append("file", element);
-      data.append("upload_preset", process.env.REACT_APP_CLOUDINARY_PRESET);
-      data.append("cloud_name", process.env.REACT_APP_CLOUDINARY_CLOUD_NAME);
-      try {
-        const res = await fetch(process.env.REACT_APP_CLOUDINARY_BASE_URL, {
-          method: "POST",
-          body: data,
-        });
-        const result = await res.json();
-        if (result.url) {
-          setFile(result.url.toString());
-        } else {
-          toast.error("Upload failed");
+      // If Cloudinary is configured, use it; otherwise convert to base64 locally
+      const cloudUrl = process.env.REACT_APP_CLOUDINARY_BASE_URL;
+      const cloudPreset = process.env.REACT_APP_CLOUDINARY_PRESET;
+      const cloudName = process.env.REACT_APP_CLOUDINARY_CLOUD_NAME;
+
+      if (cloudUrl && cloudPreset && cloudName) {
+        setLoading(true);
+        const data = new FormData();
+        data.append("file", element);
+        data.append("upload_preset", cloudPreset);
+        data.append("cloud_name", cloudName);
+        try {
+          const res = await fetch(cloudUrl, { method: "POST", body: data });
+          const result = await res.json();
+          if (result.url) {
+            setFile(result.url.toString());
+            toast.success("Photo uploaded");
+          } else {
+            toast.error("Cloudinary upload failed");
+          }
+        } catch (error) {
+          toast.error("Upload error");
         }
-      } catch (error) {
-        toast.error("Upload error");
+        setLoading(false);
+      } else {
+        // No Cloudinary config — convert to base64 for local use
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setFile(reader.result);
+          toast.success("Photo selected");
+        };
+        reader.onerror = () => toast.error("Could not read file");
+        reader.readAsDataURL(element);
       }
-      setLoading(false);
     } else {
-      setLoading(false);
-      toast.error("Please select an image in jpeg or png format");
+      toast.error("Please select a jpeg or png image");
     }
   };
 
@@ -102,7 +117,7 @@ function Register() {
           success: "User registered successfully",
           error: "Unable to register user",
           loading: "Registering user...",
-        }
+        },
       );
       return navigate("/login");
     } catch (error) {}
@@ -115,22 +130,24 @@ function Register() {
         <div className="register-container flex-center">
           <h2 className="form-heading">Sign Up</h2>
           <form onSubmit={formSubmit} className="register-form">
-            <input
-              type="text"
-              name="firstname"
-              className="form-input"
-              placeholder="Enter your first name"
-              value={formDetails.firstname}
-              onChange={inputChange}
-            />
-            <input
-              type="text"
-              name="lastname"
-              className="form-input"
-              placeholder="Enter your last name"
-              value={formDetails.lastname}
-              onChange={inputChange}
-            />
+            <div className="form-row">
+              <input
+                type="text"
+                name="firstname"
+                className="form-input"
+                placeholder="First name"
+                value={formDetails.firstname}
+                onChange={inputChange}
+              />
+              <input
+                type="text"
+                name="lastname"
+                className="form-input"
+                placeholder="Last name"
+                value={formDetails.lastname}
+                onChange={inputChange}
+              />
+            </div>
             <input
               type="email"
               name="email"
@@ -146,22 +163,24 @@ function Register() {
               id="profile-pic"
               className="form-input"
             />
-            <input
-              type="password"
-              name="password"
-              className="form-input"
-              placeholder="Enter your password"
-              value={formDetails.password}
-              onChange={inputChange}
-            />
-            <input
-              type="password"
-              name="confpassword"
-              className="form-input"
-              placeholder="Confirm your password"
-              value={formDetails.confpassword}
-              onChange={inputChange}
-            />
+            <div className="form-row">
+              <input
+                type="password"
+                name="password"
+                className="form-input"
+                placeholder="Password"
+                value={formDetails.password}
+                onChange={inputChange}
+              />
+              <input
+                type="password"
+                name="confpassword"
+                className="form-input"
+                placeholder="Confirm password"
+                value={formDetails.confpassword}
+                onChange={inputChange}
+              />
+            </div>
             <select
               name="role"
               value={selectedRole}

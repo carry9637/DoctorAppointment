@@ -33,7 +33,7 @@ const AdminApplications = () => {
   const acceptUser = async (userId) => {
     try {
       const confirm = window.confirm(
-        "Are you sure you want to accept this application?"
+        "Are you sure you want to accept this application?",
       );
       if (confirm) {
         await toast.promise(
@@ -44,13 +44,13 @@ const AdminApplications = () => {
               headers: {
                 authorization: `Bearer ${localStorage.getItem("token")}`,
               },
-            }
+            },
           ),
           {
             success: "Application approved successfully",
             error: "Unable to approve application",
             loading: "Approving application...",
-          }
+          },
         );
         getAllApp();
       }
@@ -64,7 +64,7 @@ const AdminApplications = () => {
   const rejectUser = async (userId) => {
     try {
       const confirm = window.confirm(
-        "Are you sure you want to reject this application?"
+        "Are you sure you want to reject this application?",
       );
       if (confirm) {
         await toast.promise(
@@ -75,13 +75,13 @@ const AdminApplications = () => {
               headers: {
                 authorization: `Bearer ${localStorage.getItem("token")}`,
               },
-            }
+            },
           ),
           {
             success: "Application rejected successfully",
             error: "Unable to reject application",
             loading: "Rejecting application...",
-          }
+          },
         );
         getAllApp();
       }
@@ -99,178 +99,174 @@ const AdminApplications = () => {
 
   return (
     <div className="admin-main">
-      {loading ? (
-        <Loading />
-      ) : (
-        <>
-          <div className="admin-header">
-            <div className="header-title">Doctor Applications</div>
-          </div>
+      <>
+        <div className="admin-header">
+          <div className="header-title">Doctor Applications</div>
+        </div>
 
-          <div className="admin-content">
-            <div className="data-section">
-              <div className="section-header">
-                <div className="section-title">Pending Applications</div>
-                <div style={{ color: "var(--text-light)", fontSize: "0.9rem" }}>
-                  Total: {Array.isArray(applications) ? applications.length : 0}
-                </div>
+        <div className="admin-content">
+          <div className="data-section">
+            <div className="section-header">
+              <div className="section-title">Pending Applications</div>
+              <div style={{ color: "var(--text-light)", fontSize: "0.9rem" }}>
+                Total: {Array.isArray(applications) ? applications.length : 0}
               </div>
+            </div>
 
-              {Array.isArray(applications) && applications.length > 0 ? (
-                <>
-                  {/* Desktop Table View */}
-                  <div className="data-table-wrapper">
-                    <table className="data-table">
-                      <thead>
-                        <tr>
-                          <th>Profile</th>
-                          <th>Name</th>
-                          <th>Email</th>
-                          <th>Mobile</th>
-                          <th>Experience</th>
-                          <th>Specialization</th>
-                          <th>Fees</th>
-                          <th>Action</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {Array.isArray(applications) &&
-                          applications?.map((ele) => (
-                            <tr key={ele?._id}>
-                              <td>
-                                <img
-                                  src={
-                                    ele?.userId?.pic ||
-                                    "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg"
-                                  }
-                                  alt={ele?.userId?.firstname}
-                                  className="table-avatar"
-                                />
-                              </td>
-                              <td>
-                                {ele?.userId?.firstname} {ele?.userId?.lastname}
-                              </td>
-                              <td>{ele?.userId?.email}</td>
-                              <td>{ele?.userId?.mobile}</td>
-                              <td>{ele?.experience} years</td>
-                              <td>{ele?.specialization}</td>
-                              <td>₹{ele?.fees}</td>
-                              <td>
-                                <div style={{ display: "flex", gap: "8px" }}>
-                                  <button
-                                    className="btn btn-success"
-                                    onClick={() => acceptUser(ele?.userId?._id)}
-                                  >
-                                    ✓ Approve
-                                  </button>
-                                  <button
-                                    className="btn btn-danger"
-                                    onClick={() => rejectUser(ele?.userId?._id)}
-                                  >
-                                    ✕ Reject
-                                  </button>
-                                </div>
-                              </td>
-                            </tr>
-                          ))}
-                      </tbody>
-                    </table>
-                  </div>
+            {Array.isArray(applications) && applications.length > 0 ? (
+              <>
+                {/* Desktop Table View */}
+                <div className="data-table-wrapper">
+                  <table className="data-table">
+                    <thead>
+                      <tr>
+                        <th>Profile</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Mobile</th>
+                        <th>Experience</th>
+                        <th>Specialization</th>
+                        <th>Fees</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {Array.isArray(applications) &&
+                        applications?.map((ele) => (
+                          <tr key={ele?._id}>
+                            <td>
+                              <img
+                                src={
+                                  ele?.userId?.pic ||
+                                  "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg"
+                                }
+                                alt={ele?.userId?.firstname}
+                                className="table-avatar"
+                              />
+                            </td>
+                            <td>
+                              {ele?.userId?.firstname} {ele?.userId?.lastname}
+                            </td>
+                            <td>{ele?.userId?.email}</td>
+                            <td>{ele?.userId?.mobile}</td>
+                            <td>{ele?.experience} years</td>
+                            <td>{ele?.specialization}</td>
+                            <td>₹{ele?.fees}</td>
+                            <td>
+                              <div style={{ display: "flex", gap: "8px" }}>
+                                <button
+                                  className="btn btn-success"
+                                  onClick={() => acceptUser(ele?.userId?._id)}
+                                >
+                                  ✓ Approve
+                                </button>
+                                <button
+                                  className="btn btn-danger"
+                                  onClick={() => rejectUser(ele?.userId?._id)}
+                                >
+                                  ✕ Reject
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                    </tbody>
+                  </table>
+                </div>
 
-                  {/* Mobile Card View */}
-                  <div>
-                    {Array.isArray(applications) &&
-                      applications?.map((ele) => (
-                        <div className="mobile-card" key={ele?._id}>
-                          <div
-                            style={{
-                              display: "flex",
-                              gap: "12px",
-                              marginBottom: "12px",
-                            }}
-                          >
-                            <img
-                              src={
-                                ele?.userId?.pic ||
-                                "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg"
-                              }
-                              alt={ele?.userId?.firstname}
-                              className="table-avatar"
-                            />
-                            <div style={{ flex: 1 }}>
-                              <div
-                                style={{
-                                  fontWeight: "600",
-                                  color: "var(--text-dark)",
-                                }}
-                              >
-                                {ele?.userId?.firstname} {ele?.userId?.lastname}
-                              </div>
-                              <div
-                                style={{
-                                  fontSize: "0.85rem",
-                                  color: "var(--text-light)",
-                                }}
-                              >
-                                {ele?.userId?.email}
-                              </div>
+                {/* Mobile Card View */}
+                <div>
+                  {Array.isArray(applications) &&
+                    applications?.map((ele) => (
+                      <div className="mobile-card" key={ele?._id}>
+                        <div
+                          style={{
+                            display: "flex",
+                            gap: "12px",
+                            marginBottom: "12px",
+                          }}
+                        >
+                          <img
+                            src={
+                              ele?.userId?.pic ||
+                              "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg"
+                            }
+                            alt={ele?.userId?.firstname}
+                            className="table-avatar"
+                          />
+                          <div style={{ flex: 1 }}>
+                            <div
+                              style={{
+                                fontWeight: "600",
+                                color: "var(--text-dark)",
+                              }}
+                            >
+                              {ele?.userId?.firstname} {ele?.userId?.lastname}
+                            </div>
+                            <div
+                              style={{
+                                fontSize: "0.85rem",
+                                color: "var(--text-light)",
+                              }}
+                            >
+                              {ele?.userId?.email}
                             </div>
                           </div>
-
-                          <div className="card-row">
-                            <span className="card-label">Mobile</span>
-                            <span className="card-value">
-                              {ele?.userId?.mobile || "N/A"}
-                            </span>
-                          </div>
-
-                          <div className="card-row">
-                            <span className="card-label">Experience</span>
-                            <span className="card-value">
-                              {ele?.experience} years
-                            </span>
-                          </div>
-
-                          <div className="card-row">
-                            <span className="card-label">Specialization</span>
-                            <span className="card-value">
-                              {ele?.specialization}
-                            </span>
-                          </div>
-
-                          <div className="card-row">
-                            <span className="card-label">Fees</span>
-                            <span className="card-value">₹{ele?.fees}</span>
-                          </div>
-
-                          <div className="card-actions">
-                            <button
-                              className="btn btn-success"
-                              onClick={() => acceptUser(ele?.userId?._id)}
-                            >
-                              ✓ Approve
-                            </button>
-                            <button
-                              className="btn btn-danger"
-                              onClick={() => rejectUser(ele?.userId?._id)}
-                            >
-                              ✕ Reject
-                            </button>
-                          </div>
                         </div>
-                      ))}
-                  </div>
-                </>
-              ) : (
-                <div className="empty-state">
-                  <div className="empty-state-icon">📋</div>
-                  <div className="empty-state-text">No applications found</div>
+
+                        <div className="card-row">
+                          <span className="card-label">Mobile</span>
+                          <span className="card-value">
+                            {ele?.userId?.mobile || "N/A"}
+                          </span>
+                        </div>
+
+                        <div className="card-row">
+                          <span className="card-label">Experience</span>
+                          <span className="card-value">
+                            {ele?.experience} years
+                          </span>
+                        </div>
+
+                        <div className="card-row">
+                          <span className="card-label">Specialization</span>
+                          <span className="card-value">
+                            {ele?.specialization}
+                          </span>
+                        </div>
+
+                        <div className="card-row">
+                          <span className="card-label">Fees</span>
+                          <span className="card-value">₹{ele?.fees}</span>
+                        </div>
+
+                        <div className="card-actions">
+                          <button
+                            className="btn btn-success"
+                            onClick={() => acceptUser(ele?.userId?._id)}
+                          >
+                            ✓ Approve
+                          </button>
+                          <button
+                            className="btn btn-danger"
+                            onClick={() => rejectUser(ele?.userId?._id)}
+                          >
+                            ✕ Reject
+                          </button>
+                        </div>
+                      </div>
+                    ))}
                 </div>
-              )}
-            </div>
+              </>
+            ) : (
+              <div className="empty-state">
+                <div className="empty-state-icon">📋</div>
+                <div className="empty-state-text">No applications found</div>
+              </div>
+            )}
           </div>
-        </>
-      )}
+        </div>
+      </>
     </div>
   );
 };
